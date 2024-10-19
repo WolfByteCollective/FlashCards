@@ -44,8 +44,8 @@ const Dashboard = () => {
   const [decks, setDecks] = useState<Deck[]>([]);
   const [fetchingDecks, setFetchingDecks] = useState(false);
   const sliderRef = useRef<HTMLDivElement>(null); // Ref for the slider container
-  const [showArrows, setShowArrows] = useState(false); // State to control arrows visibility
-
+  const [canScrollLeft, setCanScrollLeft] = useState(false); // Track left scroll visibility
+  const [canScrollRight, setCanScrollRight] = useState(false); // Track right scroll visibility
   const flashCardUser = window.localStorage.getItem("flashCardUser");
   const { localId } = (flashCardUser && JSON.parse(flashCardUser)) || {};
 
@@ -54,9 +54,11 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() =>{
-    if (sliderRef.current){
-      const slider = sliderRef.current
-      setShowArrows(slider.scrollWidth > slider.clientWidth);
+    updateArrowsVisibility(); // Check arrows visibility when decks load
+    const slider = sliderRef.current
+    if (slider){
+      slider.addEventListener("scroll", updateArrowsVisibility); // Listen to scroll events
+      return () => slider.removeEventListener("scroll", updateArrowsVisibility); // Cleanup
     }
   }, [decks]);
 
@@ -89,6 +91,14 @@ const Dashboard = () => {
         title: "Deck Deletion Failed!",
         confirmButtonColor: "#221daf",
       });
+    }
+  };
+
+  const updateArrowsVisibility = () => {
+    if (sliderRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = sliderRef.current;
+      setCanScrollLeft(scrollLeft > 0); // Show left arrow if not at the beginning
+      setCanScrollRight(scrollLeft + clientWidth < scrollWidth); // Show right arrow if not at the end
     }
   };
 
@@ -136,7 +146,7 @@ const Dashboard = () => {
               </div>
             ) : (
               <div className="slider-container"> {/* Slider wrapper */}
-                {showArrows && ( // Conditionally render left arrow
+                {canScrollLeft && ( // Conditionally render left arrow
                   <button className="arrow left" onClick={() => scroll("left")}>
                     <LeftOutlined />
                   </button>
@@ -194,7 +204,7 @@ const Dashboard = () => {
                     </div>
                   ))}
                 </div>
-                {showArrows && ( // Conditionally render right arrow
+                {canScrollRight && ( // Conditionally render right arrow
                   <button className="arrow right" onClick={() => scroll("right")}>
                     <RightOutlined />
                   </button>
