@@ -22,13 +22,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 import { Card, Popconfirm } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import EmptyImg from "assets/images/empty.svg";
 import { PropagateLoader } from "react-spinners";
 import http from "utils/api";
 import "./styles.scss";
 import Swal from "sweetalert2";
+import { LeftOutlined, RightOutlined } from "@ant-design/icons"; // Ant Icons for Arrows
 
 interface Deck {
   id: string;
@@ -42,6 +43,7 @@ interface Deck {
 const Dashboard = () => {
   const [decks, setDecks] = useState<Deck[]>([]);
   const [fetchingDecks, setFetchingDecks] = useState(false);
+  const sliderRef = useRef<HTMLDivElement>(null); // Ref for the slider container
 
   const flashCardUser = window.localStorage.getItem("flashCardUser");
   const { localId } = (flashCardUser && JSON.parse(flashCardUser)) || {};
@@ -53,44 +55,41 @@ const Dashboard = () => {
   const fetchDecks = async () => {
     setFetchingDecks(true);
     const params = { localId };
-    await http
-      .get("/deck/all", {
-        params,
-      })
-      .then((res) => {
-        const { decks: _decks } = res.data || {};
-        setDecks(_decks);
-        setFetchingDecks(false);
-      })
-      .catch((err) => {
-        setDecks([]);
-        setFetchingDecks(false);
-      });
+    try {
+      const res = await http.get("/deck/all", { params });
+      setDecks(res.data?.decks || []);
+    } catch (err) {
+      setDecks([]);
+    } finally {
+      setFetchingDecks(false);
+    }
   };
 
-  const handleDeleteDeck = async(id: any) => {
-
-    await http
-      .delete(`/deck/delete/${id}`)
-      .then((res) => {
-        const { id } = res.data;
-        Swal.fire({
-          icon: 'success',
-          title: 'Deck Deleted Successfully!',
-          text: 'You have successfully deleted a deck',
-          confirmButtonColor: '#221daf',
-        }).then(() => {
-          window.location.replace(`/dashboard`);
-        })
-      })
-      .catch((err) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Deck Deletion Failed!',
-          text: 'An error occurred, please try again',
-          confirmButtonColor: '#221daf',
-        })
+  const handleDeleteDeck = async (id: string) => {
+    try {
+      await http.delete(`/deck/delete/${id}`);
+      Swal.fire({
+        icon: "success",
+        title: "Deck Deleted Successfully!",
+        confirmButtonColor: "#221daf",
+      }).then(() => {
+        fetchDecks(); // Refresh decks
       });
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Deck Deletion Failed!",
+        confirmButtonColor: "#221daf",
+      });
+    }
+  };
+
+  // Handle horizontal scrolling on arrow button clicks
+  const scroll = (direction: "left" | "right") => {
+    if (sliderRef.current) {
+      const scrollAmount = direction === "left" ? -300 : 300;
+      sliderRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    }
   };
 
   return (
@@ -105,89 +104,90 @@ const Dashboard = () => {
                     <h3>
                       <b>Hey, Welcome Back!</b> 👋
                     </h3>
-                    <p className="">
-                      Let's start creating, memorizing and sharing your
-                      flashcards.
-                    </p>
+                    <p>Let's start creating, memorizing, and sharing your flashcards.</p>
                   </div>
                 </div>
               </Card>
             </div>
           </div>
 
-          <div className="flash-card__list row mt-4">
+          <div className="row mt-4">
             <div className="col-md-12">
               <p className="title">Your Library</p>
             </div>
             {fetchingDecks ? (
-              <div
-                className="col-md-12 text-center d-flex justify-content-center align-items-center"
-                style={{ height: "300px" }}
-              >
+              <div className="col-md-12 text-center" style={{ height: "300px" }}>
                 <PropagateLoader color="#221daf" />
               </div>
             ) : decks.length === 0 ? (
               <div className="row justify-content-center empty-pane">
                 <div className="text-center">
-                  <img className="img-fluid" src={EmptyImg} />
+                  <img className="img-fluid" src={EmptyImg} alt="No Decks" />
                   <p>No Study Deck Created Yet</p>
                 </div>
               </div>
             ) : (
-              decks.map(
-                ({ id, title, description, visibility, cards_count }, index) => {
-                  return (
-                    <div className="col-md-4">
-                      <div className="flash-card__item">
-                        <div className="d-flex justify-content-between align-items-center">
-                          <Link to={`/deck/${id}/practice`}>
-                            <h5>{title}</h5>
-                          </Link>
-                          <div className="d-flex gap-2 visibility-status align-items-center">
-                            {visibility === "public" ? (
-                              <i className="lni lni-world"></i>
-                            ) : visibility === "private" ? (
-                              <i className="lni lni-lock-alt"></i>
-                            ) : null}{" "}
-                            {visibility}
-                          </div>
-                        </div>
-                        <p className="description">{description}</p>
-                        <p className="items-count">{cards_count} item(s)</p>
+              <div className="slider-container"> {/* Slider wrapper */}
+                <button className="arrow left" onClick={() => scroll("left")}>  {/* Left arrow */}
+                  <LeftOutlined />
+                </button>
+                <div className="deck-slider" ref={sliderRef}>  {/* Slider container */}
+                  {decks.map(({ id, title, description, visibility, cards_count }) => (
+                    <div className="deck-card" key={id}>  {/* Parent div to wrap everything */}
+                      <div className="d-flex justify-content-between align-items-center">
+                        <Link to={`/deck/${id}/practice`}>
+                          <h5>{title}</h5>  {/* Deck title */}
+                        </Link>
 
-                        <div className="d-flex menu">
-                          <div className="col">
-                            <Link to={`/deck/${id}/practice`}>
-                              <button className="btn text-left">
-                                <i className="lni lni-book"></i> Practice
-                              </button>
-                            </Link>
-                          </div>
-                          <div className="col d-flex justify-content-center">
-                            <Link to={`/deck/${id}/update`}>
-                              <button className="btn text-edit">
-                                <i className="lni lni-pencil-alt"></i> Update
-                              </button>
-                            </Link>
-                          </div>
-                          <div className="col d-flex justify-content-end">
-                            <Popconfirm
-                              title="Are you sure to delete this task?"
-                              onConfirm={() => handleDeleteDeck(id)}
-                              okText="Yes"
-                              cancelText="No"
-                            >
-                              <button className="btn text-danger">
-                                <i className="lni lni-trash-can"></i> Delete
-                              </button>
-                            </Popconfirm>
-                          </div>
+                        <div className="d-flex gap-2 visibility-status align-items-center">
+                          {/* Visibility icon */}
+                          {visibility === "public" ? (
+                            <i className="lni lni-world"></i>
+                          ) : (
+                            <i className="lni lni-lock-alt"></i>
+                          )}
+                          {visibility}
+                        </div>
+                      </div>
+
+                      <p className="description">{description}</p>  {/* Deck description */}
+                      <p className="items-count">{cards_count} item(s)</p>  {/* Cards count */}
+
+                      <div className="d-flex menu">  {/* Actions menu */}
+                        <div className="col">
+                          <Link to={`/deck/${id}/practice`}>
+                            <button className="btn text-left">
+                              <i className="lni lni-book"></i> Practice
+                            </button>
+                          </Link>
+                        </div>
+                        <div className="col d-flex justify-content-center">
+                          <Link to={`/deck/${id}/update`}>
+                            <button className="btn text-edit">
+                              <i className="lni lni-pencil-alt"></i> Update
+                            </button>
+                          </Link>
+                        </div>
+                        <div className="col d-flex justify-content-end">
+                          <Popconfirm
+                            title="Are you sure to delete this deck?"
+                            onConfirm={() => handleDeleteDeck(id)}
+                            okText="Yes"
+                            cancelText="No"
+                          >
+                            <button className="btn text-danger">
+                              <i className="lni lni-trash-can"></i> Delete
+                            </button>
+                          </Popconfirm>
                         </div>
                       </div>
                     </div>
-                  );
-                }
-              )
+                  ))}
+                </div>
+                <button className="arrow right" onClick={() => scroll("right")}>
+                  <RightOutlined />
+                </button>
+              </div>
             )}
           </div>
         </div>

@@ -245,3 +245,46 @@
         margin-bottom: 120px;
     }
 }
+
+.slider-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .deck-slider {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 10px 0;
+    gap: 20px;
+  }
+  
+  .deck-card {
+    min-width: 350px;
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+  }
+  
+  .arrow {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+  }
+  
+  .arrow.left {
+    left: -20px;
+  }
+  
+  .arrow.right {
+    right: -20px;
+  }
+  
