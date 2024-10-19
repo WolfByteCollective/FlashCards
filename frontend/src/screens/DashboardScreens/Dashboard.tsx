@@ -44,6 +44,7 @@ const Dashboard = () => {
   const [decks, setDecks] = useState<Deck[]>([]);
   const [fetchingDecks, setFetchingDecks] = useState(false);
   const sliderRef = useRef<HTMLDivElement>(null); // Ref for the slider container
+  const [showArrows, setShowArrows] = useState(false); // State to control arrows visibility
 
   const flashCardUser = window.localStorage.getItem("flashCardUser");
   const { localId } = (flashCardUser && JSON.parse(flashCardUser)) || {};
@@ -51,6 +52,13 @@ const Dashboard = () => {
   useEffect(() => {
     fetchDecks();
   }, []);
+
+  useEffect(() =>{
+    if (sliderRef.current){
+      const slider = sliderRef.current
+      setShowArrows(slider.scrollWidth > slider.clientWidth);
+    }
+  }, [decks]);
 
   const fetchDecks = async () => {
     setFetchingDecks(true);
@@ -128,9 +136,11 @@ const Dashboard = () => {
               </div>
             ) : (
               <div className="slider-container"> {/* Slider wrapper */}
-                <button className="arrow left" onClick={() => scroll("left")}>  {/* Left arrow */}
-                  <LeftOutlined />
-                </button>
+                {showArrows && ( // Conditionally render left arrow
+                  <button className="arrow left" onClick={() => scroll("left")}>
+                    <LeftOutlined />
+                  </button>
+                )}
                 <div className="deck-slider" ref={sliderRef}>  {/* Slider container */}
                   {decks.map(({ id, title, description, visibility, cards_count }) => (
                     <div className="deck-card" key={id}>  {/* Parent div to wrap everything */}
@@ -184,9 +194,11 @@ const Dashboard = () => {
                     </div>
                   ))}
                 </div>
-                <button className="arrow right" onClick={() => scroll("right")}>
-                  <RightOutlined />
-                </button>
+                {showArrows && ( // Conditionally render right arrow
+                  <button className="arrow right" onClick={() => scroll("right")}>
+                    <RightOutlined />
+                  </button>
+                )}
               </div>
             )}
           </div>
