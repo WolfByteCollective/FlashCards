@@ -104,9 +104,17 @@ const PracticeDeck = () => {
                     <p>{description}</p>
                   </div>
                   {localId === userId && (
-                    <Link to={`/deck/${id}/update`}>
-                      <button className="btn btn-white">Update Deck</button>
-                    </Link>
+                    <div className="d-flex gap-2">
+                      <Link to={`/deck/${id}/update`}>
+                        <button className="btn btn-white">Update Deck</button>
+                      </Link>
+                      <button
+                        className="btn btn-white"
+                        onClick={() => setQuizMode(!quizMode)}
+                      >
+                        {quizMode ? "Exit Quiz" : "Take Quiz"}
+                      </button>
+                    </div>
                   )}
                 </div>
               </Card>
@@ -135,15 +143,6 @@ const PracticeDeck = () => {
                 <Flashcard cards={cards} />
               )}
             </div>
-          </div>
-
-          <div className="row justify-content-center mt-4">
-            <button
-              className="btn btn-primary"
-              onClick={() => setQuizMode(!quizMode)}
-            >
-              {quizMode ? "Exit Quiz" : "Take Quiz"}
-            </button>
           </div>
         </div>
       </section>

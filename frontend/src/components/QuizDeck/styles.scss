@@ -9,23 +9,28 @@
 
   .option-btn {
     padding: 10px 20px;
-    font-size: 18px;
+    margin: 5px;
     border: none;
-    border-radius: 8px;
+    border-radius: 5px;
     cursor: pointer;
-    background-color: #ddd;
-    transition: background-color 0.3s;
-
-    &.correct {
-      background-color: #4caf50;
-      color: white;
-    }
-
-    &.incorrect {
-      background-color: #f44336;
-      color: white;
-    }
+    transition: background-color 0.3s ease;
   }
+  
+  .option-btn.highlight-correct {
+    background-color: #01b908; /* Green for correct answer */
+    color: white;
+  }
+  
+  .option-btn.highlight-incorrect {
+    background-color: #e31c0d; /* Red for incorrect answer */
+    color: white;
+  }
+  
+  .option-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.8;
+  }
+  
 }
 
 .quiz-summary {

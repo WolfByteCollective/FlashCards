@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./styles.scss";
 
 interface QuizProps {
@@ -9,11 +9,16 @@ export default function Quiz({ cards }: QuizProps) {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [isQuizFinished, setIsQuizFinished] = useState(false); // Track quiz completion
+  const [shuffledOptions, setShuffledOptions] = useState<string[]>([]); // State to hold shuffled options
 
   const currentCard = cards[currentCardIndex];
-  const options = shuffleOptions(cards, currentCard?.back);
+
+  useEffect(() => {
+    if (currentCard) {
+      setShuffledOptions(shuffleOptions(cards, currentCard.back));
+    }
+  }, [currentCard, cards]); // Shuffle options whenever currentCard changes
 
   function shuffleOptions(cards: QuizProps["cards"], correctAnswer: string) {
     const otherOptions = cards
@@ -27,15 +32,12 @@ export default function Quiz({ cards }: QuizProps) {
 
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
-    const correct = option === currentCard.back;
-    setIsCorrect(correct);
-    if (correct) setScore(score + 1);
+    const isCorrect = option === currentCard.back;
+    if (isCorrect) setScore(score + 1);
 
-    // Move to the next card or end the quiz after a delay
+    // Move to the next card or end the quiz after a short delay
     setTimeout(() => {
       setSelectedOption(null);
-      setIsCorrect(null);
-
       if (currentCardIndex + 1 < cards.length) {
         setCurrentCardIndex(currentCardIndex + 1);
       } else {
@@ -66,18 +68,20 @@ export default function Quiz({ cards }: QuizProps) {
     <div className="quiz-container">
       <h2>{currentCard.front}</h2>
       <div className="options">
-        {options.map((option, index) => (
+        {shuffledOptions.map((option, index) => (
           <button
             key={index}
             className={`option-btn ${
-              selectedOption === option
-                ? isCorrect
-                  ? "correct"
-                  : "incorrect"
+              selectedOption
+                ? option === currentCard.back
+                  ? "highlight-correct" // Highlight correct answer in green
+                  : selectedOption === option
+                  ? "highlight-incorrect" // Highlight user's wrong choice in red
+                  : ""
                 : ""
             }`}
             onClick={() => handleOptionClick(option)}
-            disabled={!!selectedOption}
+            disabled={!!selectedOption} // Disable after an answer is selected
           >
             {option}
           </button>
