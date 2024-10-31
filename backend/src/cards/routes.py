@@ -25,6 +25,8 @@
 '''routes.py is a file in cards folder that has all the functions defined that manipulate the cards. All CRUD functions that needs to be performed on cards are defined here.'''
 from flask import Blueprint, jsonify, request
 from flask_cors import cross_origin
+from datetime import datetime
+
 try:
     from .. import firebase
 except ImportError:
@@ -140,3 +142,67 @@ def deletecard(id,cardid):
             message = 'Delete Card Failed',
             status = 400
         ), 400
+
+
+@card_bp.route('/deck/<deckId>/leaderboard', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def get_leaderboard(deckId):
+    '''This endpoint fetches the leaderboard data for a specific deck.'''
+    try:
+        # Fetch leaderboard data for the given deck
+        leaderboard_entries = db.child("leaderboard").child(deckId).get()
+        leaderboard = []
+        for entry in leaderboard_entries.each():
+            data = entry.val()
+            leaderboard.append({
+                "userEmail": data.get("userEmail"),
+                "correct": data.get("correct", 0),
+                "incorrect": data.get("incorrect", 0),
+                "attempts": data.get("attempts", 0),
+                "lastAttempt": datetime.now().isoformat()
+            })
+
+        # Sort leaderboard by score (correct answers) then by last attempt (descending)
+        leaderboard.sort(key=lambda x: (-x["correct"], x["lastAttempt"]), reverse=True)
+
+        return jsonify({
+            "leaderboard": leaderboard,
+            "message": "Leaderboard data fetched successfully",
+            "status": 200
+        }), 200
+    except Exception as e:
+        return jsonify({
+            "leaderboard": [],
+            "message": f"An error occurred: {e}",
+            "status": 400
+        }), 400
+    
+@card_bp.route('/deck/<deck_id>/update-leaderboard', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def update_leaderboard(deck_id):
+    try:
+        data = request.get_json()
+        # Extract values from the request body
+        user_id = data.get("userId")  # Get userId from request body
+        user_email = data.get("userEmail")  # Keep for logging or notification
+        correct = data.get("correct")
+        incorrect = data.get("incorrect")
+        attempts = data.get("attempts")
+
+        if not user_id:
+            return jsonify({"message": "User ID is required"}), 400  # Validate userId presence
+
+        # Use user_id from request body to update the leaderboard
+        leaderboard_ref = db.child("leaderboard").child(deck_id).child(user_id)
+        leaderboard_ref.update({
+            "userEmail": user_email,
+            "correct": correct,
+            "incorrect": incorrect,
+            "attempts": attempts,
+            "lastAttempt": datetime.now().isoformat()
+        })
+
+        return jsonify({"message": "Leaderboard updated successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"message": "Failed to update leaderboard", "error": str(e)}), 500
