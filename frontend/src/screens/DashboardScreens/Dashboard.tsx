@@ -383,6 +383,14 @@ const Dashboard = () => {
        setFolders([]);
     }
  };
+ const [isFolderPopupVisible, setIsFolderPopupVisible] = useState(false);
+ const [selectedFolderDecks, setSelectedFolderDecks] = useState<Deck[]>([]);
+ 
+ const handleFolderClick = (folder: Folder) => {
+  setSelectedFolderDecks(folder.decks);
+  setIsFolderPopupVisible(true);
+};
+
  
 
   const handleCreateFolder = async () => {
@@ -523,7 +531,7 @@ const Dashboard = () => {
             </div>
           </div> */}
 
-          <div className="folder-list row mt-4">
+          {/* <div className="folder-list row mt-4">
               <div className="col-md-12">
                   <p className="title">My Folders</p>
               </div>
@@ -537,10 +545,9 @@ const Dashboard = () => {
                           <div key={folder.id} className="col-md-4">
                               <div className="folder-container">
                                   <h5>{folder.name}</h5>
-                                  <p>{folder.decks && folder.decks.length > 0 
-                                      ? `${folder.decks.length} deck(s)` 
-                                      : "No decks in this folder."
-                                  }</p>
+                                  <p>{folder.decks && folder.decks.length > 0 && (
+    <p>{`${folder.decks.length} deck(s)`}</p>
+)}</p>
                                   {folder.decks && folder.decks.length > 0 && (
                                       <div className="decks-in-folder">
                                           {folder.decks.map((deck) =>
@@ -557,7 +564,33 @@ const Dashboard = () => {
                       ) : null
                   )
               )}
-          </div>
+          </div> */}
+
+<div className="folder-list row mt-4">
+    <div className="col-md-12">
+        <p className="title">My Folders</p>
+    </div>
+    {folders.length === 0 ? (
+        <div className="col-md-12 text-center">
+            <p>No folders created yet.</p>
+        </div>
+    ) : (
+        folders.map((folder) =>
+            folder && folder.id ? (
+                <div key={folder.id} className="col-md-4">
+                    <div className="folder-container" onClick={() => handleFolderClick(folder)}>
+                        <h5>{folder.name}</h5>
+                        <p>
+                            {folder.decks && folder.decks.length > 0 && (
+                                <p>{`${folder.decks.length} deck(s)`}</p>
+                            )}
+                        </p>
+                    </div>
+                </div>
+            ) : null
+        )
+    )}
+</div>
 
 
 
@@ -673,9 +706,28 @@ const Dashboard = () => {
           placeholder="Enter folder name"
         />
       </Modal>
+      <Modal
+          title="Folder Contents"
+          visible={isFolderPopupVisible}
+          onCancel={() => setIsFolderPopupVisible(false)}
+          footer={null}
+      >
+          {selectedFolderDecks.length > 0 ? (
+              selectedFolderDecks.map((deck) => (
+                  <Link to={`/deck/${deck.id}/practice`} key={deck.id}>
+                      <p>{deck.title}</p>
+                  </Link>
+              ))
+          ) : (
+              <p>No decks in this folder.</p>
+          )}
+      </Modal>
+
     </div> 
   );
 };
+
+
 
 export default Dashboard;
 

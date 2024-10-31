@@ -200,3 +200,26 @@ def removedeckfromfolder():
             status=400
         ), 400
     
+@folder_bp.route('/decks/<folder_id>', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def get_decks_for_folder(folder_id):
+    '''This method is called to fetch all decks for a specific folder.'''
+    try:
+        decks = db.child("folder_deck").order_by_child("folderId").equal_to(folder_id).get()
+        deck_list = []
+        for deck in decks.each():
+            obj = deck.val()
+            obj['id'] = deck.key()  # Optional: if you need the deck ID
+            deck_list.append(obj)
+
+        return jsonify(
+            decks=deck_list,
+            message='Fetched decks successfully',
+            status=200
+        ), 200
+    except Exception as e:
+        return jsonify(
+            decks=[],
+            message=f"An error occurred: {e}",
+            status=400
+        ), 400
