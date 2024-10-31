@@ -36,34 +36,37 @@ export default function Quiz({ cards }: QuizProps) {
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
     const isCorrect = option === currentCard.back;
+    // Update the score and incorrectAnswers based on the user's selection
     if (isCorrect) {
-      setScore(score + 1);
+      setScore((prevScore) => prevScore + 1);
     } else {
-      setIncorrectAnswers(incorrectAnswers + 1);
+      setIncorrectAnswers((prevIncorrect) => prevIncorrect + 1);
     }
-
+  
     setTimeout(() => {
       setSelectedOption(null);
       if (currentCardIndex + 1 < cards.length) {
-        setCurrentCardIndex(currentCardIndex + 1);
+        setCurrentCardIndex((prevIndex) => prevIndex + 1);
       } else {
+        // Quiz is finished; call updateLeaderboard here
         setIsQuizFinished(true);
-        updateLeaderboard();
+        updateLeaderboard(score + (isCorrect ? 1 : 0), incorrectAnswers + (isCorrect ? 0 : 1));
       }
     }, 1000);
   };
-
-  const updateLeaderboard = async () => {
+  
+  // Update leaderboard function
+  const updateLeaderboard = async (finalScore: number, finalIncorrectAnswers: number) => {
     const flashCardUser = window.localStorage.getItem("flashCardUser");
     const { localId = "", email = "" } = flashCardUser ? JSON.parse(flashCardUser) : {};
-
+  
     if (localId && email) {
       try {
         await http.post(`/deck/${id}/update-leaderboard`, {
           userId: localId,
           userEmail: email,
-          correct: score,
-          incorrect: incorrectAnswers,
+          correct: finalScore, // Pass the calculated final score
+          incorrect: finalIncorrectAnswers, // Pass the calculated final incorrect answers
           attempts: currentCardIndex + 1,
         });
       } catch (error) {
@@ -71,6 +74,7 @@ export default function Quiz({ cards }: QuizProps) {
       }
     }
   };
+  
 
   const restartQuiz = () => {
     setCurrentCardIndex(0);
