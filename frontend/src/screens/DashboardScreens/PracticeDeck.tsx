@@ -23,6 +23,7 @@ SOFTWARE.
 */
 import { Card } from "antd";
 import Flashcard from "components/PracticeDeck";
+import Quiz from "components/QuizDeck"; // Importing the new Quiz component
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { PropagateLoader } from "react-spinners";
@@ -38,7 +39,7 @@ interface Deck {
   visibility: string;
 }
 
-interface Card {
+interface FlashCard {
   front: string;
   back: string;
   hint: string;
@@ -47,9 +48,10 @@ interface Card {
 const PracticeDeck = () => {
   const navigate = useNavigate();
   const [deck, setDeck] = useState<Deck | null>(null);
-  const [cards, setCards] = useState<Card[]>([]);
+  const [cards, setCards] = useState<FlashCard[]>([]);
   const [fetchingDeck, setFetchingDeck] = useState(false);
   const [fetchingCards, setFetchingCards] = useState(false);
+  const [quizMode, setQuizMode] = useState(false); // Toggle for Quiz Mode
 
   const flashCardUser = window.localStorage.getItem("flashCardUser");
   const { localId } = (flashCardUser && JSON.parse(flashCardUser)) || {};
@@ -63,30 +65,22 @@ const PracticeDeck = () => {
 
   const fetchDeck = async () => {
     setFetchingDeck(true);
-    await http
-      .get(`/deck/${id}`)
-      .then((res) => {
-        const { deck: _deck } = res.data || {};
-        setDeck(_deck);
-        setFetchingDeck(false);
-      })
-      .catch((err) => {
-        setFetchingDeck(false);
-      });
+    try {
+      const res = await http.get(`/deck/${id}`);
+      setDeck(res.data?.deck);
+    } finally {
+      setFetchingDeck(false);
+    }
   };
 
   const fetchCards = async () => {
     setFetchingCards(true);
-    await http
-      .get(`/deck/${id}/card/all`)
-      .then((res) => {
-        const { cards } = res.data || {};
-        setCards(cards);
-        setFetchingCards(false);
-      })
-      .catch((err) => {
-        setFetchingCards(false);
-      });
+    try {
+      const res = await http.get(`/deck/${id}/card/all`);
+      setCards(res.data?.cards || []);
+    } finally {
+      setFetchingCards(false);
+    }
   };
 
   const { title, description, userId } = deck || {};
@@ -106,19 +100,22 @@ const PracticeDeck = () => {
                         onClick={() => navigate(-1)}
                       ></i>
                     </h3>
-                    <div>
-                      <h3>
-                        <b>{title}</b>
-                      </h3>
-                      <p className="">{description}</p>
-                    </div>
+                    <h3><b>{title}</b></h3>
+                    <p>{description}</p>
                   </div>
-                  {
-                    localId === userId &&
-                    <Link to={`/deck/${id}/update`}>
-                      <button className="btn btn-white">Update Deck</button>
-                    </Link>
-                  }
+                  {localId === userId && (
+                    <div className="d-flex gap-2">
+                      <Link to={`/deck/${id}/update`}>
+                        <button className="btn btn-white">Update Deck</button>
+                      </Link>
+                      <button
+                        className="btn btn-white"
+                        onClick={() => setQuizMode(!quizMode)}
+                      >
+                        {quizMode ? "Exit Quiz" : "Take Quiz"}
+                      </button>
+                    </div>
+                  )}
                 </div>
               </Card>
             </div>
@@ -140,6 +137,8 @@ const PracticeDeck = () => {
                     <p>No Cards Added Yet</p>
                   </div>
                 </div>
+              ) : quizMode ? (
+                <Quiz cards={cards} /> // Render the quiz mode
               ) : (
                 <Flashcard cards={cards} />
               )}
