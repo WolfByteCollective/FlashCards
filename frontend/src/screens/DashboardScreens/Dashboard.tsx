@@ -378,32 +378,11 @@ const Dashboard = () => {
     }
   };
 
-  // const handleCreateFolder = async () => {
-  //   if (!newFolderName.trim()) {
-  //     Swal.fire("Folder name cannot be empty!", "", "error");
-  //     return;
-  //   }
-  //   try {
-  //     const res = await http.post("/folder/create", {
-  //       name: newFolderName,
-  //       userId: localId,
-  //     });
-  //     setFolders((prev) => [...prev, res.data.folder]);
-  //     Swal.fire("Folder Created Successfully!", "", "success");
-  //     setIsModalVisible(false);
-  //     setNewFolderName("");
-  //   } catch (err) {
-  //     Swal.fire("Failed to create folder!", "", "error");
-  //   }
-  // };
-  const [loading, setLoading] = useState(false);
-
   const handleCreateFolder = async () => {
     if (!newFolderName.trim()) {
       Swal.fire("Folder name cannot be empty!", "", "error");
       return;
     }
-    setLoading(true); // Disable button by setting loading state
     try {
       const res = await http.post("/folder/create", {
         name: newFolderName,
@@ -415,10 +394,31 @@ const Dashboard = () => {
       setNewFolderName("");
     } catch (err) {
       Swal.fire("Failed to create folder!", "", "error");
-    } finally {
-      setLoading(false); // Re-enable button
     }
   };
+  // const [loading, setLoading] = useState(false);
+
+  // const handleCreateFolder = async () => {
+  //   if (!newFolderName.trim()) {
+  //     Swal.fire("Folder name cannot be empty!", "", "error");
+  //     return;
+  //   }
+  //   setLoading(true); // Disable button by setting loading state
+  //   try {
+  //     const res = await http.post("/folder/create", {
+  //       name: newFolderName,
+  //       userId: localId,
+  //     });
+  //     setFolders((prev) => [...prev, res.data.folder]);
+  //     Swal.fire("Folder Created Successfully!", "", "success");
+  //     setIsModalVisible(false);
+  //     setNewFolderName("");
+  //   } catch (err) {
+  //     Swal.fire("Failed to create folder!", "", "error");
+  //   } finally {
+  //     setLoading(false); // Re-enable button
+  //   }
+  // };
   
 
   const handleDeleteDeck = async (id: string) => {
