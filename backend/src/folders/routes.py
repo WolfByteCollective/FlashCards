@@ -83,18 +83,21 @@ def getfolders():
 @folder_bp.route('/folder/create', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def createfolder():
-    '''This method is called when the user requests to create a new folder.'''
     try:
         data = request.get_json()
         folder_name = data['name']
         user_id = data['userId']
-
-        db.child("folder").push({
+        folder_ref = db.child("folder").push({
             "name": folder_name,
             "userId": user_id
         })
-
+        new_folder_id = folder_ref['name']  # Retrieve auto-generated ID
         return jsonify(
+            folder={
+                "id": new_folder_id,
+                "name": folder_name,
+                "decks": []
+            },
             message='Folder created successfully',
             status=201
         ), 201
@@ -103,6 +106,7 @@ def createfolder():
             message=f"Failed to create folder: {e}",
             status=400
         ), 400
+
 
 
 @folder_bp.route('/folder/update/<id>', methods=['PATCH'])

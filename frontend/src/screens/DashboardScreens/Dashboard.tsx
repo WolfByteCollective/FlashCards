@@ -380,22 +380,23 @@ const Dashboard = () => {
 
   const handleCreateFolder = async () => {
     if (!newFolderName.trim()) {
-      Swal.fire("Folder name cannot be empty!", "", "error");
-      return;
+        Swal.fire("Folder name cannot be empty!", "", "error");
+        return;
     }
     try {
-      const res = await http.post("/folder/create", {
-        name: newFolderName,
-        userId: localId,
-      });
-      setFolders((prev) => [...prev, res.data.folder]);
-      Swal.fire("Folder Created Successfully!", "", "success");
-      setIsModalVisible(false);
-      setNewFolderName("");
+        const res = await http.post("/folder/create", {
+            name: newFolderName,
+            userId: localId,
+        });
+        setFolders((prev) => [...prev, res.data.folder]);
+        Swal.fire("Folder Created Successfully!", "", "success");
+        setIsModalVisible(false);
+        setNewFolderName("");
     } catch (err) {
-      Swal.fire("Failed to create folder!", "", "error");
+        Swal.fire("Failed to create folder!", "", "error");
     }
-  };
+};
+
   // const [loading, setLoading] = useState(false);
 
   // const handleCreateFolder = async () => {
@@ -493,21 +494,28 @@ const Dashboard = () => {
               {folders.length === 0 ? (
                 <p>No folders created yet.</p>
               ) : (
-                folders.map((folder) => (
-                  <div key={folder.id}>
-                    <h5>{folder.name}</h5>
-                    {folder.decks.length === 0 ? (
-                      <p>No decks in this folder.</p>
-                    ) : (
-                      folder.decks.map((deck) => (
-                        <div key={deck.id}>{deck.title}</div>
-                      ))
-                    )}
-                  </div>
-                ))
+                folders.map((folder) =>
+                  folder && folder.id ? (
+                    <div key={folder.id} className="folder-container">
+                      <h5>{folder.name}</h5>
+                      {folder.decks && folder.decks.length === 0 ? (
+                        <p>No decks in this folder.</p>
+                      ) : (
+                        folder.decks.map((deck) =>
+                          deck && deck.id ? (
+                            <div key={deck.id} className="deck-container">
+                              <span>{deck.title}</span>
+                            </div>
+                          ) : null
+                        )
+                      )}
+                    </div>
+                  ) : null
+                )
               )}
             </div>
           </div>
+
 
           {/* Decks Section */}
           <div className="row mt-4">
