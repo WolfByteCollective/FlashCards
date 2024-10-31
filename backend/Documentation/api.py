@@ -32,11 +32,14 @@ def create_app():
         from auth import auth_bp
         from deck import deck_bp
         from cards import card_bp
+        from folders import folder_bp
 
         # Register Blueprints
         app.register_blueprint(auth_bp)
         app.register_blueprint(deck_bp)
         app.register_blueprint(card_bp)
+        app.register_blueprint(folder_bp)
+
 
     return app
     
