@@ -294,6 +294,7 @@
     margin-bottom: 20px;
     border-radius: 8px;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    cursor:pointer
     h5 {
         margin-bottom: 8px;
         font-weight: 600;
@@ -303,6 +304,14 @@
         color: #222;
         font-size: 16px;
         font-weight: 500;
+    }
+    .deck-title-link {
+        cursor: pointer;
+        color: #221daf;
+        font-weight: 500;
+        &:hover {
+          text-decoration: underline;
+        }
     }
 }
 
@@ -316,4 +325,3 @@
         text-decoration: underline;
     }
 }
-  

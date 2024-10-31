@@ -223,3 +223,42 @@ def get_decks_for_folder(folder_id):
             message=f"An error occurred: {e}",
             status=400
         ), 400
+    
+@folder_bp.route('/folders/all', methods=['GET'])
+def get_folders_with_decks():
+    """
+    Fetches all folders for the logged-in user, including the associated decks in each folder.
+    """
+    user_id = request.args.get('userId')
+    
+    if not user_id:
+        return jsonify({"error": "User ID is required"}), 400
+
+    try:
+        # Fetch all folders belonging to the user, including decks associated with each folder
+        folders = Folder.query.filter_by(user_id=user_id).all()
+
+        # Build response data
+        folders_data = []
+        for folder in folders:
+            folder_data = {
+                "id": folder.id,
+                "name": folder.name,
+                "decks": [
+                    {
+                        "id": deck.id,
+                        "title": deck.title,
+                        "description": deck.description,
+                        "visibility": deck.visibility,
+                        "cards_count": deck.cards_count
+                    }
+                    for deck in folder.decks
+                ]
+            }
+            folders_data.append(folder_data)
+
+        return jsonify({"folders": folders_data}), 200
+
+    except Exception as e:
+        print(f"Error fetching folders: {e}")
+        return jsonify({"error": "Failed to retrieve folders"}), 500
