@@ -357,26 +357,33 @@ const Dashboard = () => {
   }, [decks]);
 
   const fetchDecks = async () => {
-    setFetchingDecks(true);
-    const params = { localId };
+    if (!localId) return;
     try {
-      const res = await http.get("/deck/all", { params });
+      const res = await http.get("/deck/all", { params: { localId } });
       setDecks(res.data?.decks || []);
     } catch (err) {
-      setDecks([]);
-    } finally {
-      setFetchingDecks(false);
+      console.error("Error fetching decks:", err);
     }
-  };
+  }; 
+
+  // const fetchFolders = async () => {
+  //   try {
+  //     const res = await http.get("/folder/all", { params: { localId } });
+  //     setFolders(res.data?.folders || []);
+  //   } catch (err) {
+  //     setFolders([]);
+  //   }
+  // };
 
   const fetchFolders = async () => {
     try {
-      const res = await http.get("/folder/all", { params: { localId } });
-      setFolders(res.data?.folders || []);
+       const res = await http.get("/folders/all", { params: { userId: localId } });
+       setFolders(res.data?.folders || []);
     } catch (err) {
-      setFolders([]);
+       setFolders([]);
     }
-  };
+ };
+ 
 
   const handleCreateFolder = async () => {
     if (!newFolderName.trim()) {
@@ -443,7 +450,7 @@ const Dashboard = () => {
 
   const handleAddDeckToFolder = async (deckId: string, folderId: string) => {
     try {
-      await http.post("/deck/addToFolder", { deckId, folderId });
+      await http.post("/deck/add-deck", { deckId, folderId });
       fetchDecks(); // Refresh deck list
       Swal.fire("Deck added to folder!", "", "success");
     } catch (err) {

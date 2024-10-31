@@ -150,7 +150,7 @@ def deletefolder(id):
         ), 400
 
 
-@folder_bp.route('/folder/add-deck', methods=['POST'])
+@folder_bp.route('/deck/add-deck', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def adddecktofolder():
     '''This method allows the user to add a deck to a folder by folderId and deckId.'''
@@ -199,3 +199,4 @@ def removedeckfromfolder():
             message=f"Failed to remove deck from folder: {e}",
             status=400
         ), 400
+    
