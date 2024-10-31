@@ -495,7 +495,7 @@ const Dashboard = () => {
           </div>
 
           {/* Folders Section */}
-          <div className="row mt-4">
+          {/* <div className="row mt-4">
             <div className="col-md-12">
               <p className="title">My Folders</p>
               {folders.length === 0 ? (
@@ -521,7 +521,44 @@ const Dashboard = () => {
                 )
               )}
             </div>
+          </div> */}
+
+          <div className="folder-list row mt-4">
+              <div className="col-md-12">
+                  <p className="title">My Folders</p>
+              </div>
+              {folders.length === 0 ? (
+                  <div className="col-md-12 text-center">
+                      <p>No folders created yet.</p>
+                  </div>
+              ) : (
+                  folders.map((folder) =>
+                      folder && folder.id ? (
+                          <div key={folder.id} className="col-md-4">
+                              <div className="folder-container">
+                                  <h5>{folder.name}</h5>
+                                  <p>{folder.decks && folder.decks.length > 0 
+                                      ? `${folder.decks.length} deck(s)` 
+                                      : "No decks in this folder."
+                                  }</p>
+                                  {folder.decks && folder.decks.length > 0 && (
+                                      <div className="decks-in-folder">
+                                          {folder.decks.map((deck) =>
+                                              deck && deck.id ? (
+                                                  <div key={deck.id} className="deck-container">
+                                                      <span>{deck.title}</span>
+                                                  </div>
+                                              ) : null
+                                          )}
+                                      </div>
+                                  )}
+                              </div>
+                          </div>
+                      ) : null
+                  )
+              )}
           </div>
+
 
 
           {/* Decks Section */}
