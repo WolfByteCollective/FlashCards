@@ -1,4 +1,26 @@
+#MIT License
+#
+#Copyright (c) 2022 John Damilola, Leo Hsiang, Swarangi Gaurkar, Kritika Javali, Aaron Dias Barreto
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#SOFTWARE.
 
+'''routes.py is a file in deck folder that has all the functions defined that manipulate the deck. All CRUD functions are defined here.'''
 from flask import Blueprint, jsonify, request
 from flask_cors import cross_origin
 from datetime import datetime
@@ -121,3 +143,101 @@ def update_last_opened(id):
         return jsonify(message='Deck lastOpened updated successfully', status=200), 200
     except Exception as e:
         return jsonify(message=f'Failed to update lastOpened: {e}', status=400), 400
+
+
+
+@deck_bp.route('/deck/<deckId>/leaderboard', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def get_leaderboard(deckId):
+    '''This endpoint fetches the leaderboard data for a specific deck.'''
+    try:
+        # Fetch leaderboard data for the given deck
+        leaderboard_entries = db.child("leaderboard").child(deckId).get()
+        leaderboard = []
+        for entry in leaderboard_entries.each():
+            data = entry.val()
+            leaderboard.append({
+                "userEmail": data.get("userEmail"),
+                "correct": data.get("correct", 0),
+                "incorrect": data.get("incorrect", 0),
+                "lastAttempt": data.get("lastAttempt")
+            })
+
+        # Sort leaderboard by score (correct answers) then by last attempt (descending)
+        leaderboard.sort(key=lambda x: (x["correct"], x["lastAttempt"]), reverse=True)
+
+        return jsonify({
+            "leaderboard": leaderboard,
+            "message": "Leaderboard data fetched successfully",
+            "status": 200
+        }), 200
+    except Exception as e:
+        return jsonify({
+            "leaderboard": [],
+            "message": f"An error occurred: {e}",
+            "status": 400
+        }), 400
+    
+@deck_bp.route('/deck/<deck_id>/update-leaderboard', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def update_leaderboard(deck_id):
+    try:
+        data = request.get_json()
+        # Extract values from the request body
+        user_id = data.get("userId")  # Get userId from request body
+        user_email = data.get("userEmail")  # Keep for logging or notification
+        correct = data.get("correct")
+        incorrect = data.get("incorrect")
+
+        if not user_id:
+            return jsonify({"message": "User ID is required"}), 400  # Validate userId presence
+
+        # Use user_id from request body to update the leaderboard
+        leaderboard_ref = db.child("leaderboard").child(deck_id).child(user_id)
+        leaderboard_ref.update({
+            "userEmail": user_email,
+            "correct": correct,
+            "incorrect": incorrect,
+            "lastAttempt": datetime.now().isoformat()
+        })
+
+        return jsonify({"message": "Leaderboard updated successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"message": "Failed to update leaderboard", "error": str(e)}), 500
+    
+@deck_bp.route('/deck/<deckId>/user-score/<userId>', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def get_user_score(deckId, userId):
+    '''This endpoint fetches the user's score for a specific deck. If the user doesn't exist, return zero for all score values.'''
+    try:
+        # Fetch the user's leaderboard entry for the specified deck
+        leaderboard_entry = db.child("leaderboard").child(deckId).child(userId).get()
+
+        if leaderboard_entry.val() is not None:  # Check if the entry has data
+            data = leaderboard_entry.val()  # Get the value of the entry
+            score_data = {
+                "correct": data.get("correct", 0),
+                "incorrect": data.get("incorrect", 0),
+            }
+            return jsonify({
+                "score": score_data,
+                "message": "User score fetched successfully",
+                "status": 200
+            }), 200
+        else:
+            # Return zero for all score values if no entry exists
+            return jsonify({
+                "score": {
+                    "correct": 0,
+                    "incorrect": 0
+                },
+                "message": "No score found for the user, returning zeros.",
+                "status": 200  # Not Found status, as the user has no scores yet
+            }), 200
+
+    except Exception as e:
+        return jsonify({
+            "message": f"An error occurred: {e}",
+            "status": 400
+        }), 400

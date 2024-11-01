@@ -21,7 +21,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-import { Card } from "antd";
+
+import { Card, Modal, Button, Table } from "antd";
 import Flashcard from "components/PracticeDeck";
 import Quiz from "components/QuizDeck"; // Importing the new Quiz component
 import { useEffect, useState } from "react";
@@ -45,17 +46,26 @@ interface FlashCard {
   hint: string;
 }
 
+interface LeaderboardEntry {
+  userEmail: string;
+  correct: number;
+  incorrect: number;
+  attempts: number;
+  lastAttempt: string;
+}
+
 const PracticeDeck = () => {
   const navigate = useNavigate();
   const [deck, setDeck] = useState<Deck | null>(null);
   const [cards, setCards] = useState<FlashCard[]>([]);
   const [fetchingDeck, setFetchingDeck] = useState(false);
   const [fetchingCards, setFetchingCards] = useState(false);
-  const [quizMode, setQuizMode] = useState(false); // Toggle for Quiz Mode
+  const [quizMode, setQuizMode] = useState(false);
+  const [leaderboardVisible, setLeaderboardVisible] = useState(false);
+  const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
 
   const flashCardUser = window.localStorage.getItem("flashCardUser");
   const { localId } = (flashCardUser && JSON.parse(flashCardUser)) || {};
-
   const { id } = useParams();
 
   useEffect(() => {
@@ -83,6 +93,40 @@ const PracticeDeck = () => {
     }
   };
 
+  const fetchLeaderboard = async () => {
+    try {
+      const res = await http.get(`/deck/${id}/leaderboard`);
+      // Format lastAttempt before setting leaderboard data
+      const formattedLeaderboard = (res.data?.leaderboard || []).map((entry: { lastAttempt: string | number | Date; }) => ({
+        ...entry,
+        lastAttempt: new Date(entry.lastAttempt).toLocaleString(), // Convert to human-readable format
+      }));
+      setLeaderboardData(formattedLeaderboard);
+    } catch (error) {
+      console.error("Error fetching leaderboard:", error);
+    }
+  };
+
+  const showLeaderboard = () => {
+    fetchLeaderboard();
+    setLeaderboardVisible(true);
+  };
+
+  const closeLeaderboard = () => {
+    setLeaderboardVisible(false);
+  };
+
+  const leaderboardColumns = [
+    {
+      title: "Rank", // New column for rank
+      render: (_: any, __: any, index: number) => index + 1, // Automatically generates the row number
+      key: "rank"
+    },
+    { title: "Email", dataIndex: "userEmail", key: "userEmail" },
+    { title: "Correct Answers", dataIndex: "correct", key: "correct" },
+    { title: "Incorrect Answers", dataIndex: "incorrect", key: "incorrect" }
+  ];
+
   const { title, description, userId } = deck || {};
 
   return (
@@ -103,19 +147,25 @@ const PracticeDeck = () => {
                     <h3><b>{title}</b></h3>
                     <p>{description}</p>
                   </div>
-                  {localId === userId && (
-                    <div className="d-flex gap-2">
+                  <div className="d-flex gap-2">
+                    {localId === userId && (
                       <Link to={`/deck/${id}/update`}>
                         <button className="btn btn-white">Update Deck</button>
                       </Link>
-                      <button
-                        className="btn btn-white"
-                        onClick={() => setQuizMode(!quizMode)}
-                      >
-                        {quizMode ? "Exit Quiz" : "Take Quiz"}
-                      </button>
-                    </div>
-                  )}
+                    )}
+                    <button
+                      className="btn btn-white"
+                      onClick={() => setQuizMode(!quizMode)}
+                    >
+                      {quizMode ? "Exit Quiz" : "Take Quiz"}
+                    </button>
+                    <button
+                      className="btn btn-white"
+                      onClick={showLeaderboard}
+                    >
+                      View Leaderboard
+                    </button>
+                  </div>
                 </div>
               </Card>
             </div>
@@ -138,7 +188,7 @@ const PracticeDeck = () => {
                   </div>
                 </div>
               ) : quizMode ? (
-                <Quiz cards={cards} /> // Render the quiz mode
+                <Quiz cards={cards} /> // Render quiz mode
               ) : (
                 <Flashcard cards={cards} />
               )}
@@ -146,6 +196,28 @@ const PracticeDeck = () => {
           </div>
         </div>
       </section>
+
+      {/* Leaderboard Modal */}
+      <Modal
+        title="Leaderboard"
+        open={leaderboardVisible}
+        onCancel={closeLeaderboard}
+        footer={[
+          <Button key="close" onClick={closeLeaderboard}>
+            Close
+          </Button>,
+        ]}
+        width="80%" // Set a width for the modal
+        style={{ maxHeight: '80vh', overflowY: 'auto' }} // Allow for scroll if content is too tall
+        bodyStyle={{ padding: '0' }} // Optionally adjust padding
+      >
+        <Table
+          columns={leaderboardColumns}
+          dataSource={leaderboardData}
+          pagination={false}
+          rowKey="userEmail"  // Ensure a unique key for each row
+        />
+      </Modal>
     </div>
   );
 };
