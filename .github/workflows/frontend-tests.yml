@@ -11,8 +11,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    defaults:
-      run: cd ..
 
     steps:
       # Step 1: Check out the repository
@@ -26,15 +24,15 @@ jobs:
           node-version: '18'
           cache: 'npm'
 
-      # Step 3: Install dependencies with correct working directory
+      # Step 3: Install dependencies within FlashCards/frontend
       - name: Install dependencies
         run: npm install
-        # working-directory: frontend  # Ensure this matches the actual path
+        working-directory: FlashCards/frontend
 
-      # Step 4: Run tests in the correct directory
+      # Step 4: Run tests within FlashCards/frontend
       - name: Run frontend tests
         run: npm test -- --watchAll=false
-        # working-directory: frontend
+        working-directory: FlashCards/frontend
 
       # Step 5: Upload test results as an artifact (optional)
       - name: Upload test results
@@ -42,4 +40,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: test-results
-          # path: frontend/coverage  # Update to the correct Jest output path if necessary
+          path: FlashCards/frontend/coverage  # Adjust if necessary to the actual output directory for test results
