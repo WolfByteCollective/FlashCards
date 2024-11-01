@@ -21,8 +21,8 @@
 #SOFTWARE.
 
 '''routes.py is a file in the folder folder that has all the functions defined that manipulate folders. All CRUD functions are defined here.'''
-from flask import Blueprint, jsonify, request
-from flask_cors import cross_origin
+from flask import Blueprint, jsonify, request # type: ignore
+from flask_cors import cross_origin # type: ignore
 from __init__ import firebase
 
 
@@ -225,10 +225,7 @@ def get_decks_for_folder(folder_id):
         deck_title = []
         for deck in deck_list:
             deck_obj = db.child("deck").child(deck).get()
-            deck_title.append(deck_obj.val()["title"])
-
-
-        print("deck_title", deck_title)
+            deck_title.append( {"id": deck, "title": deck_obj.val()["title"]} )
 
         return jsonify(
             decks=deck_title,

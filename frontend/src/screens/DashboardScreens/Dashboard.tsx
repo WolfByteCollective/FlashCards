@@ -715,10 +715,9 @@ const Dashboard = () => {
           {selectedFolderDecks.length === 0 ? (
             <p>No decks in this folder.</p>
           ) : (
-            selectedFolderDecks.map(({ id }) => (
-              <div key={id}>
-                {/* <p>{title}</p> */}
-                <Button className="folder-deck-button" onClick={() => navigateToDeck(id, "abc")}>{id}</Button>
+            selectedFolderDecks.map(({ id, title }, index) => (
+              <div key={index}>
+                <Button className="folder-deck-button" onClick={() => navigateToDeck(id, title)}>{title}</Button>
               </div>
             ))
           )}
