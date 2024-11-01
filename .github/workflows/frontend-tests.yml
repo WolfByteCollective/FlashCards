@@ -27,12 +27,12 @@ jobs:
       # Step 3: Install dependencies with correct working directory
       - name: Install dependencies
         run: npm install
-        working-directory: FLASHCARDS/frontend  # Ensure this matches the actual path
+        working-directory: frontend  # Ensure this matches the actual path
 
       # Step 4: Run tests in the correct directory
       - name: Run frontend tests
         run: npm test -- --watchAll=false
-        working-directory: FLASHCARDS/frontend
+        working-directory: frontend
 
       # Step 5: Upload test results as an artifact (optional)
       - name: Upload test results
@@ -40,4 +40,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: test-results
-          path: FLASHCARDS/frontend/coverage  # Update to the correct Jest output path if necessary
+          path: frontend/coverage  # Update to the correct Jest output path if necessary
