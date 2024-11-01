@@ -24,13 +24,15 @@ jobs:
           node-version: '18'
           cache: 'npm'
 
-      # Step 3: Install dependencies
+      # Step 3: Install dependencies in the correct directory
       - name: Install dependencies
         run: npm install
+        working-directory: flashcards/frontend
 
-      # Step 4: Run tests without watching
+      # Step 4: Run tests without watching in the correct directory
       - name: Run frontend tests
         run: npm test -- --watchAll=false
+        working-directory: flashcards/frontend
 
       # Step 5: Upload test results as an artifact (optional)
       - name: Upload test results
@@ -38,4 +40,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: test-results
-          path: ./coverage # Replace with the actual Jest output directory if needed
+          path: flashcards/frontend/coverage # Adjust if needed
