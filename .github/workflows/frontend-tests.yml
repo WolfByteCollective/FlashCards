@@ -11,34 +11,23 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    defaults:
-      run: cd
 
     steps:
       # Step 1: Check out the repository
       - name: Check out code
         uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js and cache npm dependencies
+      # Step 2: Set up Node.js (make sure to use the correct Node.js version for your project)
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
+          cache: 'npm'
 
-      # Step 3: Install dependencies with correct working directory
+      # Step 3: Install dependencies
       - name: Install dependencies
-        run: npm install
-        # working-directory: frontend  # Ensure this matches the actual path
+        run: npm install --force
 
-      # Step 4: Run tests in the correct directory
+      # Step 4: Run tests
       - name: Run frontend tests
         run: npm test -- --watchAll=false
-        # working-directory: frontend
-
-      # Step 5: Upload test results as an artifact (optional)
-      - name: Upload test results
-        if: failure()
-        uses: actions/upload-artifact@v3
-        with:
-          name: test-results
-          # path: frontend/coverage  # Update to the correct Jest output path if necessary
