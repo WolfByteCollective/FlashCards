@@ -28,9 +28,9 @@
                 font-size: 20px;
                 font-weight: 400;
             }
-            .menu {
+            // .menu {
 
-            }
+            // }
             p {
                 color: #222;
                 &.description {
@@ -325,3 +325,15 @@
         text-decoration: underline;
     }
 }
+
+.folder-deck-button {
+    color: #221daf;
+    background-color: #fff;
+    border: 1px solid #221daf;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    width: 100%;
+    &:hover {
+      background-color: #f0f0f0;
+    }
+  }
