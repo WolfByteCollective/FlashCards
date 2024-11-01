@@ -77,7 +77,7 @@ jobs:
     
     - name: Run Tests with Coverage
       run: |
-        python -m coverage run -m pytest backend/test/Test.py
+        python -m coverage run -m pytest backend/test/test_main.py
         python -m coverage xml
         python -m coverage html
 
