@@ -24,7 +24,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd frontend  # Change to your frontend directory
-          npm install
+          npm install --force
 
       - name: Run tests
         run: |
