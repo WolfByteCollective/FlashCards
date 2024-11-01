@@ -22,387 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-// import { Card, Popconfirm, Button, Input, Modal } from "antd";
-// import { useEffect, useState, useRef } from "react";
-// import { Link } from "react-router-dom";
-// import EmptyImg from "assets/images/empty.svg";
-// import { PropagateLoader } from "react-spinners";
-// import http from "utils/api";
-// import Swal from "sweetalert2";
-// import { LeftOutlined, RightOutlined } from "@ant-design/icons";
-
-// interface Deck {
-//   id: string;
-//   userId: string;
-//   title: string;
-//   description: string;
-//   visibility: string;
-//   cards_count: number;
-//   folderId?: string; // Optional to track folder assignment
-// }
-
-// interface Folder {
-//   id: string;
-//   name: string;
-//   decks: Deck[];
-// }
-
-// const Dashboard = () => {
-//   const [decks, setDecks] = useState<Deck[]>([]);
-//   const [folders, setFolders] = useState<Folder[]>([]);
-//   const [fetchingDecks, setFetchingDecks] = useState(false);
-//   const [isModalVisible, setIsModalVisible] = useState(false);
-//   const [newFolderName, setNewFolderName] = useState("");
-//   const sliderRef = useRef<HTMLDivElement>(null);
-//   const [canScrollLeft, setCanScrollLeft] = useState(false);
-//   const [canScrollRight, setCanScrollRight] = useState(false);
-//   const flashCardUser = window.localStorage.getItem("flashCardUser");
-//   const { localId } = (flashCardUser && JSON.parse(flashCardUser)) || {};
-//   const sliderRef = useRef<HTMLDivElement>(null);
-//   const history = useHistory();
-
-//   useEffect(() => {
-//     fetchDecks();
-//     fetchFolders();
-//   }, []);
-
-//   useEffect(() => {
-//     updateArrowsVisibility();
-//     const slider = sliderRef.current;
-//     if (slider) {
-//       slider.addEventListener("scroll", updateArrowsVisibility);
-//       return () => slider.removeEventListener("scroll", updateArrowsVisibility);
-//     }
-//   }, [decks]);
-
-//   const fetchDecks = async () => {
-//     if (!localId) return;
-//     try {
-//       const res = await http.get("/deck/all", { params: { localId } });
-//       setDecks(res.data?.decks || []);
-//     } catch (err) {
-//       console.error("Error fetching decks:", err);
-//     } finally {
-//       setFetchingDecks(false);
-//     }
-//   }; 
-
-//   const fetchFolders = async () => {
-//     try {
-//        const res = await http.get("/folders/all", { params: { userId: localId } });
-//        setFolders(res.data?.folders || []);
-//     } catch (err) {
-//        setFolders([]);
-//     }
-//  };
-//  const [isFolderPopupVisible, setIsFolderPopupVisible] = useState(false);
-//  const [selectedFolderDecks, setSelectedFolderDecks] = useState<Deck[]>([]);
- 
-//  const handleFolderClick = (folder: Folder) => {
-//   setSelectedFolderDecks(folder.decks);
-//   setIsFolderPopupVisible(true);
-// };
-
-//   const navigateToDeck = (deckId: string) => {
-//     history.push(`/deck/${deckId}/practice`);  // Navigate to deck on click
-// };
-
-//   return (
-//     <div className="dashboard-page dashboard-commons">
-//       {/* Folder list with popup */}
-//       <div className="folder-list row mt-4">
-//         <div className="col-md-12">
-//           <p className="title">My Folders</p>
-//         </div>
-//         {folders.length === 0 ? (
-//           <div className="col-md-12 text-center">
-//             <p>No folders created yet.</p>
-//           </div>
-//         ) : (
-//           folders.map((folder) => (
-//             <div key={folder.id} className="col-md-4">
-//               <div className="folder-container" onClick={() => handleFolderClick(folder)}>
-//                 <h5>{folder.name}</h5>
-//                 <p>{folder.decks.length} deck(s)</p>
-//               </div>
-//             </div>
-//           ))
-//         )}
-//       </div>
-
-
-
-//   const handleCreateFolder = async () => {
-//     if (!newFolderName.trim()) {
-//         Swal.fire("Folder name cannot be empty!", "", "error");
-//         return;
-//     }
-//     try {
-//         const res = await http.post("/folder/create", {
-//             name: newFolderName,
-//             userId: localId,
-//         });
-//         setFolders((prev) => [...prev, res.data.folder]);
-//         Swal.fire("Folder Created Successfully!", "", "success");
-//         setIsModalVisible(false);
-//         setNewFolderName("");
-//     } catch (err) {
-//         Swal.fire("Failed to create folder!", "", "error");
-//     }
-// };
-
-//   const handleDeleteDeck = async (id: string) => {
-//     try {
-//       await http.delete(`/deck/delete/${id}`);
-//       Swal.fire({
-//         icon: "success",
-//         title: "Deck Deleted Successfully!",
-//         confirmButtonColor: "#221daf",
-//       }).then(() => {
-//         fetchDecks(); // Refresh deck list after deletion
-//       });
-//     } catch (err) {
-//       Swal.fire({
-//         icon: "error",
-//         title: "Deck Deletion Failed!",
-//         confirmButtonColor: "#221daf",
-//       });
-//     }
-//   };
-
-//   const handleAddDeckToFolder = async (deckId: string, folderId: string) => {
-//     try {
-//       await http.post("/deck/add-deck", { deckId, folderId });
-//       fetchDecks(); // Refresh deck list
-//       Swal.fire("Deck added to folder!", "", "success");
-//     } catch (err) {
-//       Swal.fire("Failed to add deck to folder!", "", "error");
-//     }
-//   };
-
-//   const updateArrowsVisibility = () => {
-//     if (sliderRef.current) {
-//       const { scrollLeft, scrollWidth, clientWidth } = sliderRef.current;
-//       setCanScrollLeft(scrollLeft > 0);
-//       setCanScrollRight(scrollLeft + clientWidth < scrollWidth);
-//     }
-//   };
-
-//   const scroll = (direction: "left" | "right") => {
-//     if (sliderRef.current) {
-//       const scrollAmount = direction === "left" ? -300 : 300;
-//       sliderRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
-//     }
-//   };
-
-//   return (
-//     <div className="dashboard-page dashboard-commons">
-//       <section>
-//         <div className="container">
-//           <div className="row">
-//             <div className="col-md-12">
-//               <Card className="welcome-card border-[#E7EAED]">
-//                 <div className="flex justify-between items-center">
-//                   <div>
-//                     <h3>
-//                       <b>Hey, Welcome Back!</b> 👋
-//                     </h3>
-//                     <p>Let's start creating, memorizing, and sharing your flashcards.</p>
-//                   </div>
-//                   {/* Create Folder Button */}
-//                   <Button onClick={() => setIsModalVisible(true)}>Create Folder</Button>
-//                 </div>
-//               </Card>
-//             </div>
-//           </div>
-
-//           {/* Folders Section */}
-//             <div className="folder-list row mt-4">
-//                 <div className="col-md-12">
-//                     <p className="title">My Folders</p>
-//                 </div>
-//                 {folders.length === 0 ? (
-//                     <div className="col-md-12 text-center">
-//                         <p>No folders created yet.</p>
-//                     </div>
-//                 ) : (
-//                     folders.map((folder) =>
-//                         folder && folder.id ? (
-//                             <div key={folder.id} className="col-md-4">
-//                                 <div className="folder-container" onClick={() => handleFolderClick(folder)}>
-//                                     <h5>{folder.name}</h5>
-//                                     <p>
-//                                         {folder.decks && folder.decks.length > 0 && (
-//                                             <p>{`${folder.decks.length} deck(s)`}</p>
-//                                         )}
-//                                     </p>
-//                                 </div>
-//                             </div>
-//                         ) : null
-//                     )
-//                 )}
-//             </div>
-
-
-
-//           {/* Decks Section */}
-//           <div className="row mt-4">
-//             <div className="col-md-12">
-//               <p className="title">Your Library</p>
-//             </div>
-//             {fetchingDecks ? (
-//               <div className="col-md-12 text-center" style={{ height: "300px" }}>
-//                 <PropagateLoader color="#221daf" />
-//               </div>
-//             ) : decks.length === 0 ? (
-//               <div className="row justify-content-center empty-pane">
-//                 <div className="text-center">
-//                   <img className="img-fluid" src={EmptyImg} alt="No Decks" />
-//                   <p>No Study Deck Created Yet</p>
-//                 </div>
-//               </div>
-//             ) : (
-//               <div className="slider-container">
-//                 {canScrollLeft && (
-//                   <button className="arrow left" onClick={() => scroll("left")}>
-//                     <LeftOutlined />
-//                   </button>
-//                 )}
-//                 <div className="deck-slider" ref={sliderRef}>
-//                   {decks.map(({ id, title, description, visibility, cards_count }) => (
-//                     <div className="deck-card" key={id}>
-//                       <div className="d-flex justify-content-between align-items-center">
-//                         <Link to={`/deck/${id}/practice`}>
-//                           <h5>{title}</h5>
-//                         </Link>
-//                         <div className="d-flex gap-2 visibility-status align-items-center">
-//                           {visibility === "public" ? (
-//                             <i className="lni lni-world"></i>
-//                           ) : (
-//                             <i className="lni lni-lock-alt"></i>
-//                           )}
-//                           {visibility}
-//                         </div>
-//                       </div>
-//                       <p className="description">{description}</p>
-//                       <p className="items-count">{cards_count} item(s)</p>
-
-//                       <div className="d-flex menu">
-//                         <div className="col">
-//                           <Link to={`/deck/${id}/practice`}>
-//                             <button className="btn text-left">
-//                               <i className="lni lni-book"></i> Practice
-//                             </button>
-//                           </Link>
-//                         </div>
-//                         <div className="col d-flex justify-content-center">
-//                           <Link to={`/deck/${id}/update`}>
-//                             <button className="btn text-edit">
-//                               <i className="lni lni-pencil-alt"></i> Update
-//                             </button>
-//                           </Link>
-//                         </div>
-//                         <div className="col d-flex justify-content-end">
-//                           <Popconfirm
-//                             title="Are you sure to delete this deck?"
-//                             onConfirm={() => handleDeleteDeck(id)}
-//                             okText="Yes"
-//                             cancelText="No"
-//                           >
-//                             <button className="btn text-danger">
-//                               <i className="lni lni-trash-can"></i> Delete
-//                             </button>
-//                           </Popconfirm>
-//                         </div>
-//                       </div>
-
-//                       {/* Add to Folder */}
-//                       <select
-//                         onChange={(e) => handleAddDeckToFolder(id, e.target.value)}
-//                         defaultValue=""
-//                       >
-//                         <option value="" disabled>
-//                           Add to Folder
-//                         </option>
-//                         {folders.map((folder) => (
-//                           <option key={folder.id} value={folder.id}>
-//                             {folder.name}
-//                           </option>
-//                         ))}
-//                       </select>
-//                     </div>
-//                   ))}
-//                 </div>
-//                 {canScrollRight && (
-//                   <button className="arrow right" onClick={() => scroll("right")}>
-//                     <RightOutlined />
-//                   </button>
-//                 )}
-//               </div>
-//             )}
-//           </div>
-//         </div>
-//       </section>
-
-//       {/* Create Folder Modal */}
-//       <Modal
-//         title="Create New Folder"
-//         visible={isModalVisible}
-//         onOk={handleCreateFolder}
-//         onCancel={() => setIsModalVisible(false)}
-//       >
-//         <Input
-//           value={newFolderName}
-//           onChange={(e) => setNewFolderName(e.target.value)}
-//           placeholder="Enter folder name"
-//         />
-//       </Modal>
-//       <Modal
-//           title="Folder Contents"
-//           visible={isFolderPopupVisible}
-//           onCancel={() => setIsFolderPopupVisible(false)}
-//           footer={null}
-//       >
-//           {selectedFolderDecks.length > 0 ? (
-//               selectedFolderDecks.map((deck) => (
-//                   <Link to={`/deck/${deck.id}/practice`} key={deck.id}>
-//                       <p>{deck.title}</p>
-//                   </Link>
-//               ))
-//           ) : (
-//               <p>No decks in this folder.</p>
-//           )}
-//       </Modal>
-//       <Modal
-//         title="Folder Contents"
-//         visible={isFolderPopupVisible}
-//         onCancel={() => setIsFolderPopupVisible(false)}
-//         footer={null}
-//       >
-//         {selectedFolderDecks.length > 0 ? (
-//           selectedFolderDecks.map((deck) => (
-//             <p
-//               key={deck.id}
-//               onClick={() => navigateToDeck(deck.id)}
-//               className="deck-title-link"
-//             >
-//               {deck.title}
-//             </p>
-//           ))
-//         ) : (
-//           <p>No decks in this folder.</p>
-//         )}
-//       </Modal>
-
-
-//     </div> 
-//   );
-// };
-
-
-
-// export default Dashboard;
-
 
 import { Card, Popconfirm, Button, Input, Modal } from "antd";
 import { useEffect, useState, useRef } from "react";
@@ -433,17 +52,16 @@ const Dashboard = () => {
   const [decks, setDecks] = useState<Deck[]>([]);
   const [folders, setFolders] = useState<Folder[]>([]);
   const [fetchingDecks, setFetchingDecks] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [newFolderName, setNewFolderName] = useState("");
   const [isFolderPopupVisible, setIsFolderPopupVisible] = useState(false);
   const [selectedFolderDecks, setSelectedFolderDecks] = useState<Deck[]>([]);
   const sliderRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
+
   const flashCardUser = window.localStorage.getItem("flashCardUser");
   const { localId } = (flashCardUser && JSON.parse(flashCardUser)) || {};
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchDecks();
@@ -458,7 +76,6 @@ const Dashboard = () => {
       return () => slider.removeEventListener("scroll", updateArrowsVisibility);
     }
   }, [decks]);
-
 
   const fetchDecks = async () => {
     setFetchingDecks(true);
@@ -475,7 +92,6 @@ const Dashboard = () => {
   const fetchFolders = async () => {
     try {
       const res = await http.get("/folders/all", { params: { userId: localId } });
-      console.log("res:", res)
       setFolders(res.data?.folders || []);
     } catch (err) {
       console.error("Error fetching folders:", err);
@@ -483,38 +99,17 @@ const Dashboard = () => {
   };
 
   const handleFolderClick = async (folder: Folder) => {
-    // console.log("Selected Folder: ", folder.id);
-    // fetchDecksForFolder(folder.id);
     try {
       const res = await http.get(`/decks/${folder.id}`);
-      console.log("res:", res)
-      // setFolders(res.data?.folders || []);
       setSelectedFolderDecks(res.data?.decks);
     } catch (err) {
       console.error("Error fetching folders:", err);
     }
-    console.log("Selected deck: ", folder.decks)
     setIsFolderPopupVisible(true);
   };
 
   const navigateToDeck = (deckId: string, deckTitle: string) => {
     navigate(`/deck/${deckId}/practice?title=${encodeURIComponent(deckTitle)}`);
-  };
-
-  const handleCreateFolder = async () => {
-    if (!newFolderName.trim()) {
-      Swal.fire("Folder name cannot be empty!", "", "error");
-      return;
-    }
-    try {
-      const res = await http.post("/folder/create", { name: newFolderName, userId: localId });
-      setFolders((prev) => [...prev, res.data.folder]);
-      Swal.fire("Folder Created Successfully!", "", "success");
-      setIsModalVisible(false);
-      setNewFolderName("");
-    } catch (err) {
-      Swal.fire("Failed to create folder!", "", "error");
-    }
   };
 
   const handleDeleteDeck = async (id: string) => {
@@ -560,12 +155,9 @@ const Dashboard = () => {
               <Card className="welcome-card border-[#E7EAED]">
                 <div className="flex justify-between items-center">
                   <div>
-                    <h3>
-                      <b>Hey, Welcome Back!</b> 👋
-                    </h3>
+                    <h3><b>Hey, Welcome Back!</b> 👋</h3>
                     <p>Let's start creating, memorizing, and sharing your flashcards.</p>
                   </div>
-                  <Button onClick={() => setIsModalVisible(true)}>Create Folder</Button>
                 </div>
               </Card>
             </div>
@@ -585,10 +177,8 @@ const Dashboard = () => {
                 <div key={folder.id} className="col-md-4">
                   <div className="folder-container" onClick={() => handleFolderClick(folder)}>
                     <h5>{folder.name}</h5>
-                    <p>
-                      {/* {folder.decks && folder.decks.length > 0 && `${folder.decks.length} deck(s)`}  */}
-                      {folder.decks.length > 0 ? `${folder.decks.length} deck(s)` : null}                                    
-                    </p>
+                    <p>{folder.decks.length > 0 ? `${folder.decks.length} deck(s)` : null}</p>
+                    <p>{folder.decks.length === 0 ? `${folder.decks.length} deck(s)` : null}</p>
                   </div>
                 </div>
               ))
@@ -622,15 +212,9 @@ const Dashboard = () => {
                   {decks.map(({ id, title, description, visibility, cards_count }) => (
                     <div className="deck-card" key={id}>
                       <div className="d-flex justify-content-between align-items-center">
-                        <Link to={`/deck/${id}/practice`}>
-                          <h5>{title}</h5>
-                        </Link>
+                        <Link to={`/deck/${id}/practice`}><h5>{title}</h5></Link>
                         <div className="d-flex gap-2 visibility-status align-items-center">
-                          {visibility === "public" ? (
-                            <i className="lni lni-world"></i>
-                          ) : (
-                            <i className="lni lni-lock-alt"></i>
-                          )}
+                          {visibility === "public" ? <i className="lni lni-world"></i> : <i className="lni lni-lock-alt"></i>}
                           {visibility}
                         </div>
                       </div>
@@ -638,45 +222,38 @@ const Dashboard = () => {
                       <p className="items-count">{cards_count} item(s)</p>
                       <div className="d-flex menu">
                         <div className="col">
-                          <Link to={`/deck/${id}/practice`}>
-                            <button className="btn text-left">
-                              <i className="lni lni-book"></i> Practice
-                            </button>
-                          </Link>
+                          <Link to={`/deck/${id}/practice`}><button className="btn text-left"><i className="lni lni-book"></i> Practice</button></Link>
                         </div>
                         <div className="col d-flex justify-content-center">
-                          <Link to={`/deck/${id}/update`}>
-                            <button className="btn text-edit">
-                              <i className="lni lni-pencil-alt"></i> Update
-                            </button>
-                          </Link>
+                          <Link to={`/deck/${id}/update`}><button className="btn text-edit"><i className="lni lni-pencil-alt"></i> Update</button></Link>
                         </div>
-                        <div className="col d-flex justify-content-end">
+                        <div className="col d-flex justify-content-end align-items-center">
                           <Popconfirm
                             title="Are you sure to delete this deck?"
                             onConfirm={() => handleDeleteDeck(id)}
                             okText="Yes"
                             cancelText="No"
                           >
-                            <button className="btn text-danger">
-                              <i className="lni lni-trash-can"></i> Delete
-                            </button>
+                            <button className="btn text-danger"><i className="lni lni-trash-can"></i> Delete</button>
                           </Popconfirm>
-                        </div>
-                      </div>
-                      <select
-                        onChange={(e) => handleAddDeckToFolder(id, e.target.value)}
-                        defaultValue=""
+                        {/* </div> */}
+                      {/* </div> */}
+                      <select 
+                        onChange={(e) => handleAddDeckToFolder(id, e.target.value)} 
+                        defaultValue="" 
+                        style={{ color: "#007bff", border: "1px solid #007bff", padding: "5px", borderRadius: "4px" }}
                       >
-                        <option value="" disabled>
-                          Add to Folder
+                        <option value="" disabled style={{ color: "#999" }}>
+                        Add to Folder
                         </option>
                         {folders.map((folder) => (
                           <option key={folder.id} value={folder.id}>
                             {folder.name}
                           </option>
-                        ))}
+                      ))}
                       </select>
+                      </div>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -689,24 +266,9 @@ const Dashboard = () => {
             )}
           </div>
         </div>
-      </section>
 
-      {/* Create Folder Modal */}
-      <Modal
-        title="Create New Folder"
-        open={isModalVisible}
-        onOk={handleCreateFolder}
-        onCancel={() => setIsModalVisible(false)}
-      >
-        <Input
-          value={newFolderName}
-          onChange={(e) => setNewFolderName(e.target.value)}
-          placeholder="Enter folder name"
-        />
-      </Modal>
-
-      {/* Folder Decks Modal */}
-      <Modal
+        {/* Folder Decks Modal */}
+        <Modal
           title="Folder Decks"
           open={isFolderPopupVisible}
           onCancel={() => setIsFolderPopupVisible(false)}
@@ -717,15 +279,16 @@ const Dashboard = () => {
           ) : (
             selectedFolderDecks.map(({ id, title }, index) => (
               <div key={index}>
-                <Button className="folder-deck-button" onClick={() => navigateToDeck(id, title)}>{title}</Button>
+                <Button className="folder-deck-button" onClick={() => navigateToDeck(id, title)}>
+                  {title}
+                </Button>
               </div>
             ))
           )}
-      </Modal>
-
+        </Modal>
+      </section>
     </div>
   );
 };
 
 export default Dashboard;
-
