@@ -1,5 +1,43 @@
-# # This workflow will install Python dependencies, run tests and lint with a single version of Python
-# # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+# # # This workflow will install Python dependencies, run tests and lint with a single version of Python
+# # # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+# # name: Python application
+
+# # on:
+# #   push:
+# #     branches: [ "main" ]
+# #   pull_request:
+# #     branches: [ "main" ]
+
+# # permissions:
+# #   contents: read
+
+# # jobs:
+# #   build:
+
+# #     runs-on: ubuntu-latest
+
+# #     steps:
+# #     - uses: actions/checkout@v3
+# #     - name: Set up Python 3.9
+# #       uses: actions/setup-python@v3
+# #       with:
+# #         python-version: "3.9"
+# #     - name: Install dependencies
+# #       run: |
+# #         python -m pip install --upgrade pip
+# #         pip install flake8 pytest
+# #         if [ -f backend/test/requirements.txt ]; then pip install -r backend/test/requirements.txt; fi
+# #     - name: Lint with flake8
+# #       run: |
+# #         # stop the build if there are Python syntax errors or undefined names
+# #         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+# #         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+# #         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+# #     - name: Run Tests
+# #       run: |
+# #         python3 backend/test/Test.py
+
 
 # name: Python application
 
@@ -14,30 +52,47 @@
 
 # jobs:
 #   build:
-
 #     runs-on: ubuntu-latest
 
 #     steps:
-#     - uses: actions/checkout@v3
+#     - uses: actions/checkout@v4
+    
 #     - name: Set up Python 3.9
 #       uses: actions/setup-python@v3
 #       with:
 #         python-version: "3.9"
+    
 #     - name: Install dependencies
 #       run: |
 #         python -m pip install --upgrade pip
-#         pip install flake8 pytest
+#         pip install flake8 pytest coverage flask firebase-admin flask-cors pytest-cov
 #         if [ -f backend/test/requirements.txt ]; then pip install -r backend/test/requirements.txt; fi
+    
 #     - name: Lint with flake8
 #       run: |
 #         # stop the build if there are Python syntax errors or undefined names
 #         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 #         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
 #         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-#     - name: Run Tests
+    
+#     - name: Run Tests with Coverage
 #       run: |
-#         python3 backend/test/Test.py
+#         python -m coverage run -m pytest backend/test/test_main.py
+#         python -m coverage xml
+#         python -m coverage html
 
+#     - name: Upload coverage reports to Codecov
+#       uses: codecov/codecov-action@v3
+#       env:
+#         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+#     - name: Archive code coverage results
+#       uses: actions/upload-artifact@v3
+#       with:
+#         name: code-coverage-report
+#         path: |
+#           coverage.xml
+#           htmlcov
 
 name: Python application
 
@@ -55,7 +110,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v3
     
     - name: Set up Python 3.9
       uses: actions/setup-python@v3
@@ -65,31 +120,35 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 pytest coverage flask firebase-admin flask-cors pytest-cov
+        pip install flake8 pytest pytest-cov coverage flask firebase-admin flask-cors
         if [ -f backend/test/requirements.txt ]; then pip install -r backend/test/requirements.txt; fi
     
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        # exit-zero treats all errors as warnings
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     
     - name: Run Tests with Coverage
       run: |
-        python -m coverage run -m pytest backend/test/test_main.py
-        python -m coverage xml
-        python -m coverage html
-
-    - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v3
-      env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        cd backend
+        pytest --cov=./ --cov-report=xml --cov-report=html test/
 
     - name: Archive code coverage results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v2
       with:
         name: code-coverage-report
         path: |
-          coverage.xml
-          htmlcov
+          backend/coverage.xml
+          backend/htmlcov
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./backend/coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: true
+        verbose: true
