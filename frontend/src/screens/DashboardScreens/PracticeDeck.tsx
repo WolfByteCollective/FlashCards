@@ -21,6 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+
 import { Card, Modal, Button, Table } from "antd";
 import Flashcard from "components/PracticeDeck";
 import Quiz from "components/QuizDeck"; // Importing the new Quiz component
@@ -116,10 +117,14 @@ const PracticeDeck = () => {
   };
 
   const leaderboardColumns = [
+    {
+      title: "Rank", // New column for rank
+      render: (_: any, __: any, index: number) => index + 1, // Automatically generates the row number
+      key: "rank"
+    },
     { title: "Email", dataIndex: "userEmail", key: "userEmail" },
     { title: "Correct Answers", dataIndex: "correct", key: "correct" },
     { title: "Incorrect Answers", dataIndex: "incorrect", key: "incorrect" },
-    { title: "Attempts", dataIndex: "attempts", key: "attempts" },
     { title: "Last Attempt", dataIndex: "lastAttempt", key: "lastAttempt" },
   ];
 

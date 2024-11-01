@@ -158,12 +158,11 @@ def get_leaderboard(deckId):
                 "userEmail": data.get("userEmail"),
                 "correct": data.get("correct", 0),
                 "incorrect": data.get("incorrect", 0),
-                "attempts": data.get("attempts", 0),
-                "lastAttempt": datetime.now().isoformat()
+                "lastAttempt": data.get("lastAttempt")
             })
 
         # Sort leaderboard by score (correct answers) then by last attempt (descending)
-        leaderboard.sort(key=lambda x: (-x["correct"], x["lastAttempt"]), reverse=True)
+        leaderboard.sort(key=lambda x: (x["correct"], x["lastAttempt"]), reverse=True)
 
         return jsonify({
             "leaderboard": leaderboard,
@@ -187,7 +186,6 @@ def update_leaderboard(deck_id):
         user_email = data.get("userEmail")  # Keep for logging or notification
         correct = data.get("correct")
         incorrect = data.get("incorrect")
-        attempts = data.get("attempts")
 
         if not user_id:
             return jsonify({"message": "User ID is required"}), 400  # Validate userId presence
@@ -198,7 +196,6 @@ def update_leaderboard(deck_id):
             "userEmail": user_email,
             "correct": correct,
             "incorrect": incorrect,
-            "attempts": attempts,
             "lastAttempt": datetime.now().isoformat()
         })
 
@@ -206,3 +203,39 @@ def update_leaderboard(deck_id):
 
     except Exception as e:
         return jsonify({"message": "Failed to update leaderboard", "error": str(e)}), 500
+    
+@card_bp.route('/deck/<deckId>/user-score/<userId>', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def get_user_score(deckId, userId):
+    '''This endpoint fetches the user's score for a specific deck. If the user doesn't exist, return zero for all score values.'''
+    try:
+        # Fetch the user's leaderboard entry for the specified deck
+        leaderboard_entry = db.child("leaderboard").child(deckId).child(userId).get()
+
+        if leaderboard_entry.val() is not None:  # Check if the entry has data
+            data = leaderboard_entry.val()  # Get the value of the entry
+            score_data = {
+                "correct": data.get("correct", 0),
+                "incorrect": data.get("incorrect", 0),
+            }
+            return jsonify({
+                "score": score_data,
+                "message": "User score fetched successfully",
+                "status": 200
+            }), 200
+        else:
+            # Return zero for all score values if no entry exists
+            return jsonify({
+                "score": {
+                    "correct": 0,
+                    "incorrect": 0
+                },
+                "message": "No score found for the user, returning zeros.",
+                "status": 200  # Not Found status, as the user has no scores yet
+            }), 200
+
+    except Exception as e:
+        return jsonify({
+            "message": f"An error occurred: {e}",
+            "status": 400
+        }), 400

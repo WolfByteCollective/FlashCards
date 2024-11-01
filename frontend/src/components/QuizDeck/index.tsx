@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./styles.scss";
-import http from "utils/api";  // Assuming `http` is the instance for API requests
+import http from "utils/api"; // Assuming `http` is the instance for API requests
 import { useParams } from "react-router";
 
 interface QuizProps {
@@ -36,13 +36,14 @@ export default function Quiz({ cards }: QuizProps) {
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
     const isCorrect = option === currentCard.back;
+    
     // Update the score and incorrectAnswers based on the user's selection
     if (isCorrect) {
       setScore((prevScore) => prevScore + 1);
     } else {
       setIncorrectAnswers((prevIncorrect) => prevIncorrect + 1);
     }
-  
+
     setTimeout(() => {
       setSelectedOption(null);
       if (currentCardIndex + 1 < cards.length) {
@@ -54,27 +55,32 @@ export default function Quiz({ cards }: QuizProps) {
       }
     }, 1000);
   };
-  
+
   // Update leaderboard function
   const updateLeaderboard = async (finalScore: number, finalIncorrectAnswers: number) => {
     const flashCardUser = window.localStorage.getItem("flashCardUser");
     const { localId = "", email = "" } = flashCardUser ? JSON.parse(flashCardUser) : {};
-  
+
     if (localId && email) {
       try {
-        await http.post(`/deck/${id}/update-leaderboard`, {
-          userId: localId,
-          userEmail: email,
-          correct: finalScore, // Pass the calculated final score
-          incorrect: finalIncorrectAnswers, // Pass the calculated final incorrect answers
-          attempts: currentCardIndex + 1,
-        });
+        // Fetch the user's current score for this deck
+        const response = await http.get(`/deck/${id}/user-score/${localId}`);
+        const existingScore = response.data?.score["correct"]; // Assuming the score is returned here
+        // Only update if the new score is higher than the existing score
+        if (finalScore > existingScore || (response.data.score["correct"] === 0 && response.data.score["incorrect"] === 0)) {
+          console.log("inside")
+          await http.post(`/deck/${id}/update-leaderboard`, {
+            userId: localId,
+            userEmail: email,
+            correct: finalScore, // Pass the calculated final score
+            incorrect: finalIncorrectAnswers, // Pass the calculated final incorrect answers
+          });
+        }
       } catch (error) {
         console.error("Error updating leaderboard:", error);
       }
     }
   };
-  
 
   const restartQuiz = () => {
     setCurrentCardIndex(0);
