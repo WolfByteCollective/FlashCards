@@ -17,12 +17,13 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js and cache npm dependencies
+      # Step 2: Set up Node.js and specify the path to package-lock.json for caching
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
           cache: 'npm'
+          cache-dependency-path: FlashCards/frontend/package-lock.json  # Explicit path to lock file
 
       # Step 3: Install dependencies within FlashCards/frontend
       - name: Install dependencies
@@ -40,4 +41,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: test-results
-          path: FlashCards/frontend/coverage  # Adjust if necessary to the actual output directory for test results
+          path: FlashCards/frontend/coverage  # Adjust to your Jest output path if needed
