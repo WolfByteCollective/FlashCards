@@ -2,10 +2,14 @@ from flask import Flask
 import sys
 sys.path.append('backend/src')
 import unittest
-from __init__ import firebase
-from auth.routes import auth_bp
-from deck.routes import deck_bp
-from cards.routes import card_bp
+# try:
+#     from .. import firebase
+# except ImportError:
+#     from __init__ import firebase
+# from auth.routes import auth_bp
+from src.auth.routes import auth_bp
+from src.deck.routes import deck_bp
+from src.cards.routes import card_bp
 
 class AuthTestApp(unittest.TestCase):
     def setUp(self):
