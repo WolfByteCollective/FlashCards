@@ -1,33 +1,32 @@
-name: Frontend Tests
+name: Node.js CI
 
 on:
   push:
     branches:
-      - feature-component-validations
+      - main
   pull_request:
     branches:
-      - feature-component-validations
+      - main
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Check out the repository
-      - name: Check out code
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      # Step 2: Set up Node.js (make sure to use the correct Node.js version for your project)
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v2
         with:
-          node-version: '18'
-          cache: 'npm'
+          node-version: '20.17.0'  # Specify your Node.js version
 
-      # Step 3: Install dependencies
       - name: Install dependencies
-        run: npm install --force
+        run: |
+          cd frontend  # Change to your frontend directory
+          npm install
 
-      # Step 4: Run tests
-      - name: Run frontend tests
-        run: npm test -- --watchAll=false
+      - name: Run tests
+        run: |
+          cd frontend  # Change to your frontend directory
+          npm test
