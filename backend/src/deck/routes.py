@@ -246,3 +246,24 @@ def get_user_score(deckId, userId):
             "message": f"An error occurred: {e}",
             "status": 400
         }), 400
+
+# @deck_bp.route('/deck/<id>/last-opened', methods=['PATCH'])
+# @cross_origin(supports_credentials=True)
+# def update_last_opened_deck(id):
+#     try:
+#         data = request.get_json()
+#         last_opened_at = data.get('lastOpenedAt')
+        
+#         db.child("deck").child(id).update({
+#             "lastOpenedAt": last_opened_at
+#         })
+
+#         return jsonify(
+#             message='Last opened time updated successfully',
+#             status=200
+#         ), 200
+#     except Exception as e:
+#         return jsonify(
+#             message=f"Failed to update last opened time: {e}",
+#             status=400
+#         ), 400

@@ -3,8 +3,10 @@ import unittest
 from unittest.mock import patch, MagicMock
 from flask import Flask
 from src.deck.routes import deck_bp  # Adjust the import based on your app structure
+import pytest
 
-class DeckTestApp(unittest.TestCase):
+class TestFolders(unittest.TestCase):
+    @classmethod
     def setUp(self):
         self.app = Flask(__name__, instance_relative_config=False)
         self.app.register_blueprint(deck_bp)
@@ -32,6 +34,7 @@ class DeckTestApp(unittest.TestCase):
             "incorrect": 2
         }
         assert response_data['message'] == "User score fetched successfully"
+
 
     @patch('src.deck.routes.db')
     def test_get_user_score_perfect_score(self, mock_db):

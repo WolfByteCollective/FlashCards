@@ -14,6 +14,10 @@ exclude_lines =
     if __name__ == .__main__.:
     pass
     raise ImportError
+show_missing = True
+
+[xml]
+output = coverage.xml
 
 [html]
 directory = htmlcov
