@@ -17,13 +17,13 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js and specify the path to package-lock.json for caching
+      # Step 2: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
           cache: 'npm'
-          cache-dependency-path: FlashCards/frontend/package-lock.json  # Explicit path to lock file
+          cache-dependency-path: FlashCards/frontend/package-lock.json  # Path to package-lock.json
 
       # Step 3: Install dependencies within FlashCards/frontend
       - name: Install dependencies
