@@ -124,8 +124,7 @@ const PracticeDeck = () => {
     },
     { title: "Email", dataIndex: "userEmail", key: "userEmail" },
     { title: "Correct Answers", dataIndex: "correct", key: "correct" },
-    { title: "Incorrect Answers", dataIndex: "incorrect", key: "incorrect" },
-    { title: "Last Attempt", dataIndex: "lastAttempt", key: "lastAttempt" },
+    { title: "Incorrect Answers", dataIndex: "incorrect", key: "incorrect" }
   ];
 
   const { title, description, userId } = deck || {};
