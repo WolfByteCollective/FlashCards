@@ -3,10 +3,10 @@ name: Node.js CI
 on:
   push:
     branches:
-      - main
+      - feature-component-validations
   pull_request:
     branches:
-      - main
+      - feature-component-validations
 
 jobs:
   build:
