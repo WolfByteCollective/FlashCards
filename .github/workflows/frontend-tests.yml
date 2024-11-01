@@ -11,29 +11,29 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    defaults:
+      run: cd
 
     steps:
       # Step 1: Check out the repository
       - name: Check out code
         uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js
+      # Step 2: Set up Node.js and cache npm dependencies
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: FlashCards/frontend/package-lock.json  # Path to package-lock.json
 
-      # Step 3: Install dependencies within FlashCards/frontend
+      # Step 3: Install dependencies with correct working directory
       - name: Install dependencies
         run: npm install
-        working-directory: FlashCards/frontend
+        # working-directory: frontend  # Ensure this matches the actual path
 
-      # Step 4: Run tests within FlashCards/frontend
+      # Step 4: Run tests in the correct directory
       - name: Run frontend tests
         run: npm test -- --watchAll=false
-        working-directory: FlashCards/frontend
+        # working-directory: frontend
 
       # Step 5: Upload test results as an artifact (optional)
       - name: Upload test results
@@ -41,4 +41,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: test-results
-          path: FlashCards/frontend/coverage  # Adjust to your Jest output path if needed
+          # path: frontend/coverage  # Update to the correct Jest output path if necessary
