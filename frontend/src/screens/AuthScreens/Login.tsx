@@ -1,26 +1,3 @@
-/*
-MIT License
-
-Copyright (c) 2022 John Damilola, Leo Hsiang, Swarangi Gaurkar, Kritika Javali, Aaron Dias Barreto
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
 import { message } from "antd";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -34,7 +11,7 @@ const Login = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleLogin = async(e: any) => {
-    e.preventDefault()
+    e.preventDefault();
     const payload = {
       email,
       password,
@@ -44,8 +21,8 @@ const Login = () => {
     await http
       .post("/login", payload)
       .then((res) => {
-        const { user } = res.data || {}
-        window.localStorage.setItem('flashCardUser', JSON.stringify(user))
+        const { user } = res.data || {};
+        window.localStorage.setItem('flashCardUser', JSON.stringify(user));
         Swal.fire({
           icon: 'success',
           title: 'Login Successful!',
@@ -54,7 +31,7 @@ const Login = () => {
         }).then(() => {
           setIsSubmitting(false);
           window.location.replace("/dashboard");
-        })
+        });
       })
       .catch((err) => {
         Swal.fire({
@@ -62,10 +39,11 @@ const Login = () => {
           title: 'Login Failed!',
           text: 'An error occurred, please try again',
           confirmButtonColor: '#221daf',
-        })
+        });
         setIsSubmitting(false);
       });
   };
+
   return (
     <div className="login-page">
       <section>
@@ -76,9 +54,10 @@ const Login = () => {
                 <h3>Welcome back! 👋🏼</h3>
                 <form onSubmit={handleLogin}>
                   <div className="form-group">
-                    <label>Email address</label>
+                    <label htmlFor="email">Email address</label>
                     <input
                       type="email"
+                      id="email" // Added id for the email input
                       placeholder="you@mail.com"
                       onChange={(e) => setEmail(e.target.value)}
                       className="form-control"
@@ -86,9 +65,10 @@ const Login = () => {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Password</label>
+                    <label htmlFor="password">Password</label>
                     <input
                       type="password"
+                      id="password" // Added id for the password input
                       placeholder="password"
                       onChange={(e) => setPassword(e.target.value)}
                       className="form-control"
