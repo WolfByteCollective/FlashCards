@@ -122,9 +122,11 @@ const Dashboard = () => {
   };
 
   const handleAddDeckToFolder = async (deckId: string, folderId: string) => {
+    
     try {
       await http.post("/deck/add-deck", { deckId, folderId });
       fetchDecks();
+      fetchFolders();
       Swal.fire("Deck added to folder!", "", "success");
     } catch (err) {
       Swal.fire("Failed to add deck to folder!", "", "error");
@@ -220,14 +222,10 @@ const Dashboard = () => {
                       </div>
                       <p className="description">{description}</p>
                       <p className="items-count">{cards_count} item(s)</p>
-                      <div className="d-flex menu">
-                        <div className="col">
+                      <div className="menu">
                           <Link to={`/deck/${id}/practice`}><button className="btn text-left"><i className="lni lni-book"></i> Practice</button></Link>
-                        </div>
-                        <div className="col d-flex justify-content-center">
                           <Link to={`/deck/${id}/update`}><button className="btn text-edit"><i className="lni lni-pencil-alt"></i> Update</button></Link>
-                        </div>
-                        <div className="col d-flex justify-content-end align-items-center">
+                  
                           <Popconfirm
                             title="Are you sure to delete this deck?"
                             onConfirm={() => handleDeleteDeck(id)}
@@ -236,8 +234,7 @@ const Dashboard = () => {
                           >
                             <button className="btn text-danger"><i className="lni lni-trash-can"></i> Delete</button>
                           </Popconfirm>
-                        {/* </div> */}
-                      {/* </div> */}
+        
                       <select 
                         onChange={(e) => handleAddDeckToFolder(id, e.target.value)} 
                         defaultValue="" 
@@ -252,7 +249,6 @@ const Dashboard = () => {
                           </option>
                       ))}
                       </select>
-                      </div>
                       </div>
                     </div>
                   ))}
