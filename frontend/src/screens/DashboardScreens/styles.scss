@@ -10,10 +10,10 @@
         }
         .flash-card__item {
             background: #fff;
-            padding: 30px 30px 20px;
+            padding: 30px 20px;
             margin-bottom: 20px;
             cursor: default;
-            border-radius: 8px;
+            border-radius: 12px;
             box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
             h5 {
                 margin-bottom: 8px;
@@ -28,9 +28,9 @@
                 font-size: 20px;
                 font-weight: 400;
             }
-            .menu {
+            // .menu {
 
-            }
+            // }
             p {
                 color: #222;
                 &.description {
@@ -82,15 +82,15 @@
         box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
         margin-top: 40px;
         border-radius: 12px;
-        padding: 26px 30px;
-        margin-bottom: 30px;
+        padding: 30px 20px;
+        margin-bottom: 20px;
         h3 {
             color: #fff;
             font-family: 'HW Nuckle Trial';
             margin-bottom: 4px;
         }
         p {
-            font-size: 16px;
+            font-size: 12px;
             color: #fff;
             margin-bottom: 0px;
         }
@@ -287,7 +287,56 @@
   .arrow.right {
     right: -20px;
   }
-  
+
+  .folder-container {
+    background: #fff;
+    padding: 30px 30px 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    cursor:pointer
+    h5 {
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #221daf;
+    }
+    p {
+        color: #222;
+        font-size: 16px;
+        font-weight: 500;
+    }
+    .deck-title-link {
+        cursor: pointer;
+        color: #221daf;
+        font-weight: 500;
+        &:hover {
+          text-decoration: underline;
+        }
+    }
+}
+
+.folder-popup {
+    p {
+        font-size: 16px;
+        color: #221daf;
+        cursor: pointer;
+    }
+    p:hover {
+        text-decoration: underline;
+    }
+}
+
+.folder-deck-button {
+    color: #221daf;
+    background-color: #fff;
+    border: 1px solid #221daf;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    width: 100%;
+    &:hover {
+      background-color: #f0f0f0;
+    }
+  }
   .d-flex.gap-2 {
     display: flex;
     gap: 10px;

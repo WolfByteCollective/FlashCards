@@ -16,7 +16,6 @@ const DashboardLayout = () => {
         <div className='flex w-full'>
           <div className='flex-col w-full'>
             <div className='overflow-scroll px-[40px] lg:pt-12s'>
-              <Navbar isDashboard={true} />
               <Outlet />
             </div>
           </div>
