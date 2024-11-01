@@ -17,7 +17,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js (make sure to use the correct Node.js version for your project)
+      # Step 2: Set up Node.js and cache npm dependencies
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
@@ -26,9 +26,9 @@ jobs:
 
       # Step 3: Install dependencies
       - name: Install dependencies
-        run: npm install --force
+        run: npm install
 
-      # Step 4: Run tests
+      # Step 4: Run tests without watching
       - name: Run frontend tests
         run: npm test -- --watchAll=false
 
@@ -38,4 +38,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: test-results
-          path: path-to-your-jest-output-directory # Adjust if needed
+          path: ./coverage # Replace with the actual Jest output directory if needed
