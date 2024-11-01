@@ -5,7 +5,12 @@ import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import http from "utils/api";
 
-const Navbar = ({ isDashboard }: any) => {
+interface NavbarProps {
+  isDashboard?: boolean;
+  onFolderCreated?: () => void; // Make onFolderCreated optional
+}
+
+const Navbar = ({ isDashboard, onFolderCreated }: NavbarProps) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newFolderName, setNewFolderName] = useState("");
   const flashCardUser = window.localStorage.getItem("flashCardUser");
@@ -23,10 +28,11 @@ const Navbar = ({ isDashboard }: any) => {
     }
 
     try {
-      const res = await http.post("/folder/create", { name: newFolderName, userId: localId });
+      await http.post("/folder/create", { name: newFolderName, userId: localId });
       Swal.fire("Folder Created Successfully!", "", "success");
       setIsModalVisible(false);
       setNewFolderName("");
+      if (onFolderCreated) onFolderCreated(); // Call onFolderCreated only if it's provided
     } catch (err) {
       Swal.fire("Failed to create folder!", "", "error");
     }
