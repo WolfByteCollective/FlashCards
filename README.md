@@ -11,10 +11,9 @@
   <img src="https://img.shields.io/github/languages/count/johndamilola/flashcards">
   <a href="https://github.com/JohnDamilola/FlashCards/graphs/contributors" alt="Contributors">
 <img src="https://img.shields.io/github/contributors/JohnDamilola/FlashCards?style=plastic"/> </a>
-<a href="https://github.com/JohnDamilola/FlashCards/actions/workflows/Application.yml" alt="Python application">
-<img src="https://github.com/JohnDamilola/FlashCards/actions/workflows/Application.yml/badge.svg?style=plastic?branch=main"/> </a>
 
-<!-- [![Coverage Report](https://github.com/WolfByteCollective/FlashCards/actions/workflows/Coverage.yml/badge.svg)](https://github.com/WolfByteCollective/FlashCards/actions/workflows/Coverage.yml) -->
+<a href="https://github.com/WolfByteCollective/FlashCards/actions/workflows/Application.yml" alt="Python application">
+<img src="https://github.com/WolfByteCollective/FlashCards/actions/workflows/Application.yml/badge.svg?style=plastic?branch=main"/> </a>
 
 <a href="https://app.codecov.io/gh/WolfByteCollective/FlashCards" alt="Codecov">
 <img src="https://codecov.io/github/WolfByteCollective/FlashCards/branch/main/graph/badge.svg"/> </a>
