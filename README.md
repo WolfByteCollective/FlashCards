@@ -11,10 +11,9 @@
   <img src="https://img.shields.io/github/languages/count/johndamilola/flashcards">
   <a href="https://github.com/JohnDamilola/FlashCards/graphs/contributors" alt="Contributors">
 <img src="https://img.shields.io/github/contributors/JohnDamilola/FlashCards?style=plastic"/> </a>
-<a href="https://github.com/JohnDamilola/FlashCards/actions/workflows/Application.yml" alt="Python application">
-<img src="https://github.com/JohnDamilola/FlashCards/actions/workflows/Application.yml/badge.svg?style=plastic?branch=main"/> </a>
 
-<!-- [![Coverage Report](https://github.com/WolfByteCollective/FlashCards/actions/workflows/Coverage.yml/badge.svg)](https://github.com/WolfByteCollective/FlashCards/actions/workflows/Coverage.yml) -->
+<a href="https://github.com/WolfByteCollective/FlashCards/actions/workflows/Application.yml" alt="Python application">
+<img src="https://github.com/WolfByteCollective/FlashCards/actions/workflows/Application.yml/badge.svg?style=plastic?branch=main"/> </a>
 
 <a href="https://app.codecov.io/gh/WolfByteCollective/FlashCards" alt="Codecov">
 <img src="https://codecov.io/github/WolfByteCollective/FlashCards/branch/main/graph/badge.svg"/> </a>
@@ -45,7 +44,8 @@ FlashCards is a spaced repetition learning platform to <b>create</b>, <b>memoriz
 6. Recently visited Decks
 
 ## Watch Flashcards in Action
-https://user-images.githubusercontent.com/17693596/194787705-309ebf62-2a3d-4075-94b4-6da814a953a8.mp4
+<video src="images/FlashCards.mp4" controls="controls" style="max-width: 100%; height: auto;">
+</video>
 
 ## Tech Stack
 <a href="https://flask.palletsprojects.com/en/2.2.x/"><img src="https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white" /></a>
@@ -65,19 +65,21 @@ https://user-images.githubusercontent.com/17693596/194787705-309ebf62-2a3d-4075-
 - Frontend: https://flashcards-519da.web.app/
 
 ## Current Screens
-<p>
-  <img
-    width="100%"
-    src="./frontend/src/assets/images/1.png"
-    alt="Demo Screens 1"
-  />
+## Demo Screens
 
-  <img
-    width="100%"
-    src="./frontend/src/assets/images/2.png"
-    alt="Demo Screens 2"
-  />
+## Demo Screens
+
+<p style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; ">
+  <img src="./images/dashboard.png" alt="Demo Screens 1" width="250px" height="250px style="object-fit: cover;" />
+  <img src="./images/deck to folder.png" alt="Demo Screens 2" width="250px" height="250px style="object-fit: cover;" />
+  <img src="./images/decks in folders.png" alt="Demo Screens 3" width="250px" height="250px style="object-fit: cover;" />
+  <img src="./images/practice deck.png" alt="Demo Screens 4" width="250px" height="250px style="object-fit: cover;" />
+  <img src="./images/quiz.png" alt="Demo Screens 5" width="250px" height="250px style="object-fit: cover;" />
+  <img src="./images/quiz complete.png" alt="Demo Screens 6" width="250px" height="250px style="object-fit: cover;" />
+  <img src="./images/leaderboard.png" alt="Demo Screens 7" width="250px" height="250px style="object-fit: cover;" />
 </p>
+
+
 
 ## Future Roadmap [See here](https://github.com/users/JohnDamilola/projects/1)
 ### Phase 1:
