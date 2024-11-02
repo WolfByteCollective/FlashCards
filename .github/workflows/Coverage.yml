@@ -198,11 +198,6 @@ jobs:
           cd frontend
           npm test -- --coverage --coverageReporters=lcov  # Ensure correct report generation
 
-      - name: List frontend directory
-        run: |
-          cd frontend
-          ls -R  # List files to verify the coverage report location
-
       # Upload coverage reports to Codecov
       - name: Upload backend coverage report to Codecov
         uses: codecov/codecov-action@v3
