@@ -10,6 +10,7 @@ from src.cards.routes import card_bp
 from datetime import datetime
 import pytest
 from pathlib import Path
+from unittest.mock import call
 
 # Add the parent directory to sys.path
 sys.path.append(str(Path(__file__).parent.parent))
@@ -242,5 +243,188 @@ class TestDeck(unittest.TestCase):
         response_data = json.loads(response.data)
         assert response_data['message'] == "An error occurred: Database error"
 
+    @patch('src.deck.routes.db')
+    def test_get_deck_error(self, mock_db):
+        '''Test error handling in getdeck route'''
+        # Mock the database to raise an exception
+        mock_db.child.return_value.child.return_value.get.side_effect = Exception("Database error")
+        
+        response = self.app.get('/deck/Test')
+        assert response.status_code == 400
+        response_data = json.loads(response.data)
+        assert response_data['decks'] == []
+        assert "An error occurred: Database error" in response_data['message']
+
+    @patch('src.deck.routes.db')
+    def test_get_decks_with_cards(self, mock_db):
+        '''Test getdecks route with cards count'''
+        # Create mock objects
+        mock_deck = MagicMock()
+        mock_deck_data = {
+            "userId": "Test",
+            "title": "TestDeck",
+            "description": "Test Description",
+            "visibility": "public"
+        }
+        mock_deck.val.return_value = mock_deck_data
+        mock_deck.key.return_value = "deck123"
+
+        # Create mock for decks query
+        mock_decks_query = MagicMock()
+        mock_decks_query.each.return_value = [mock_deck]
+
+        # Create mock for cards query
+        mock_cards_query = MagicMock()
+        mock_cards_query.val.return_value = {"card1": {}, "card2": {}}  # Two cards
+
+        # Set up the chain for deck query
+        mock_db.child.return_value.order_by_child.return_value.equal_to.return_value.get.side_effect = [
+            mock_decks_query,  # First call for decks
+            mock_cards_query   # Second call for cards
+        ]
+
+        # Make the request
+        response = self.app.get('/deck/all', query_string=dict(localId='Test'))
+        
+        # Assertions
+        assert response.status_code == 200
+        response_data = json.loads(response.data)
+        assert len(response_data['decks']) > 0  # Verify we have at least one deck
+        assert response_data['decks'][0]['cards_count'] == 2
+        assert response_data['decks'][0]['title'] == 'TestDeck'
+        assert response_data['decks'][0]['id'] == 'deck123'
+
+        # Verify the mock calls
+        mock_db.child.assert_has_calls([
+            call("deck"),
+            call("card")
+        ], any_order=True)
+
+    # @patch('src.deck.routes.db')
+    # def test_get_public_decks(self, mock_db):
+    #     '''Test getdecks route for public decks'''
+    #     # Create a mock deck
+    #     mock_deck = MagicMock()
+    #     mock_deck_data = {
+    #         "userId": "Test",
+    #         "title": "Public TestDeck",
+    #         "description": "Test Description",
+    #         "visibility": "public"
+    #     }
+    #     mock_deck.val.return_value = mock_deck_data
+    #     mock_deck.key.return_value = "deck123"
+
+    #     # Create a mock for the public decks query
+    #     mock_decks_query = MagicMock()
+    #     mock_decks_query.each.return_value = [mock_deck]
+
+    #     # Set up the mock to return the public decks
+    #     mock_db.child.return_value.order_by_child.return_value.equal_to.return_value.get.return_value = mock_decks_query
+
+    #     # Also mock the case when querying for public decks
+    #     mock_db.child.return_value.order_by_child.return_value.equal_to.return_value.get.return_value.each.return_value = []
+
+    #     # Set up the mock for public decks
+    #     mock_db.child.return_value.order_by_child.return_value.equal_to.return_value.get.return_value = mock_decks_query
+
+    #     # Make the request without a localId (to get public decks)
+    #     response = self.app.get('/deck/all')  # No localId provided
+
+    #     # Assertions
+    #     assert response.status_code == 200
+    #     response_data = json.loads(response.data)
+    #     assert len(response_data['decks']) == 0  # Expecting one public deck
+    #     assert response_data['decks'][0]['title'] == 'Public TestDeck'
+    #     assert response_data['decks'][0]['id'] == 'deck123'
+
+    #     # Verify that the correct calls were made to the database
+    #     mock_db.child.assert_called_with("deck")
+    #     mock_db.child.return_value.order_by_child.assert_called_with("visibility")
+    #     mock_db.child.return_value.order_by_child.return_value.equal_to.assert_called_with("public")
+
+    @patch('src.deck.routes.db')
+    def test_get_decks_error(self, mock_db):
+        '''Test error handling in getdecks route'''
+        # Mock the database to raise an exception
+        mock_db.child.return_value.order_by_child.return_value.equal_to.side_effect = Exception("Database error")
+
+        response = self.app.get('/deck/all', query_string=dict(localId='Test'))
+        assert response.status_code == 400
+        response_data = json.loads(response.data)
+        assert response_data['decks'] == []
+        assert "An error occurred Database error" in response_data['message']
+
+    @patch('src.deck.routes.db')
+    def test_update_deck_error(self, mock_db):
+        '''Test error handling in update route'''
+        # Mock the database to raise an exception
+        mock_db.child.return_value.child.return_value.update.side_effect = Exception("Database error")
+
+        response = self.app.patch('/deck/update/Test', 
+                                data=json.dumps(dict(
+                                    localId='Test',
+                                    title='TestDeck',
+                                    description='Test Description',
+                                    visibility='public'
+                                )),
+                                content_type='application/json')
+        assert response.status_code == 400
+        response_data = json.loads(response.data)
+        assert "Update Deck Failed Database error" in response_data['message']
+
+    @patch('src.deck.routes.db')
+    def test_delete_deck_error(self, mock_db):
+        '''Test error handling in delete route'''
+        # Mock the database to raise an exception
+        mock_db.child.return_value.child.return_value.remove.side_effect = Exception("Database error")
+
+        response = self.app.delete('/deck/delete/Test')
+        assert response.status_code == 400
+        response_data = json.loads(response.data)
+        assert "Delete Deck Failed Database error" in response_data['message']
+
+    @patch('src.deck.routes.db')
+    def test_get_leaderboard_error(self, mock_db):
+        '''Test error handling in get_leaderboard route'''
+        # Mock the database to raise an exception
+        mock_db.child.return_value.child.return_value.get.side_effect = Exception("Database error")
+
+        response = self.app.get('/deck/TestDeck/leaderboard')
+        assert response.status_code == 400
+        response_data = json.loads(response.data)
+        assert response_data['leaderboard'] == []
+        assert "An error occurred: Database error" in response_data['message']
+
+    @patch('src.deck.routes.db')
+    def test_update_leaderboard_missing_userid(self, mock_db):
+        '''Test update_leaderboard route with missing userId'''
+        response = self.app.post('/deck/TestDeck/update-leaderboard',
+                               data=json.dumps({
+                                   "userEmail": "test@example.com",
+                                   "correct": 10,
+                                   "incorrect": 2
+                               }),
+                               content_type='application/json')
+        assert response.status_code == 400
+        response_data = json.loads(response.data)
+        assert response_data['message'] == "User ID is required"
+
+    @patch('src.deck.routes.db')
+    def test_update_leaderboard_error(self, mock_db):
+        '''Test error handling in update_leaderboard route'''
+        # Mock the database to raise an exception
+        mock_db.child.return_value.child.return_value.child.return_value.update.side_effect = Exception("Database error")
+
+        response = self.app.post('/deck/TestDeck/update-leaderboard',
+                               data=json.dumps({
+                                   "userId": "test123",
+                                   "userEmail": "test@example.com",
+                                   "correct": 10,
+                                   "incorrect": 2
+                               }),
+                               content_type='application/json')
+        assert response.status_code == 500
+        response_data = json.loads(response.data)
+        assert response_data['message'] == "Failed to update leaderboard"
 if __name__=="__main__":
     unittest.main()
