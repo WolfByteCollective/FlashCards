@@ -65,19 +65,21 @@ FlashCards is a spaced repetition learning platform to <b>create</b>, <b>memoriz
 - Frontend: https://flashcards-519da.web.app/
 
 ## Current Screens
-<p>
-  <img
-    width="100%"
-    src="./frontend/src/assets/images/1.png"
-    alt="Demo Screens 1"
-  />
+## Demo Screens
 
-  <img
-    width="100%"
-    src="./frontend/src/assets/images/2.png"
-    alt="Demo Screens 2"
-  />
+## Demo Screens
+
+<p style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; ">
+  <img src="./images/dashboard.png" alt="Demo Screens 1" width="250px" height="250px style="object-fit: cover;" />
+  <img src="./images/deck to folder.png" alt="Demo Screens 2" width="250px" height="250px style="object-fit: cover;" />
+  <img src="./images/decks in folders.png" alt="Demo Screens 3" width="250px" height="250px style="object-fit: cover;" />
+  <img src="./images/practice deck.png" alt="Demo Screens 4" width="250px" height="250px style="object-fit: cover;" />
+  <img src="./images/quiz.png" alt="Demo Screens 5" width="250px" height="250px style="object-fit: cover;" />
+  <img src="./images/quiz complete.png" alt="Demo Screens 6" width="250px" height="250px style="object-fit: cover;" />
+  <img src="./images/leaderboard.png" alt="Demo Screens 7" width="250px" height="250px style="object-fit: cover;" />
 </p>
+
+
 
 ## Future Roadmap [See here](https://github.com/users/JohnDamilola/projects/1)
 ### Phase 1:
