@@ -66,6 +66,7 @@ def getfolders():
         folders = []
         for folder in user_folders.each():
             obj = folder.val()
+            # print("obj: ", obj)
             obj['id'] = folder.key()
             decks = db.child("folder_deck").order_by_child("folderId").equal_to(folder.key()).get()
             obj['decks'] = []
