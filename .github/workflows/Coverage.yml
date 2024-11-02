@@ -3,10 +3,10 @@ name: Coverage Report
 on:
   push:
     branches:
-      - main
+      - feature-minor-fix
   pull_request:
     branches:
-      - main
+      - feature-minor-fix
 
 jobs:
   build:
