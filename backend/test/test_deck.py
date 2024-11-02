@@ -74,26 +74,7 @@ class TestDeck(unittest.TestCase):
             response = self.app.delete('/deck/delete/Test')
             assert response.status_code == 200
 
-    # new test cases begin here
-    # def test_update_last_opened_deck_route(self):
-    #     '''Test the deck/updateLastOpened/<id> route of our app'''
-    #     with self.app:
-    #         # Arrange: Mock the database update
-    #         mock_update = MagicMock(return_value=None)
-    #         with patch('src.deck.routes.db.child') as mock_db:
-    #             mock_db.return_value.child.return_value.update = mock_update
-
-    #             # Simulate user login and deck creation
-    #             self.app.post('/login', data=json.dumps(dict(email='aaronadb@gmail.com', password='flashcards123')), content_type='application/json', follow_redirects=True)
-    #             self.app.post('/deck/create', data=json.dumps(dict(localId='Test', title='TestDeck', description='This is a test deck', visibility='public')), content_type='application/json')
-
-    #             # Act: Send a request to update the last opened timestamp
-    #             response = self.app.patch('/deck/updateLastOpened/Test', content_type='application/json')
-
-    #             # Assert: Check the response status code and mock database call
-    #             assert response.status_code == 200
-    #             mock_update.assert_called_once_with({"lastOpened": datetime.utcnow().isoformat()})
-
+   
     
     def test_update_last_opened_deck_route_failure(self):
         '''Test the deck/updateLastOpened/<id> route of our app with failure scenario'''
@@ -299,48 +280,6 @@ class TestDeck(unittest.TestCase):
             call("deck"),
             call("card")
         ], any_order=True)
-
-    # @patch('src.deck.routes.db')
-    # def test_get_public_decks(self, mock_db):
-    #     '''Test getdecks route for public decks'''
-    #     # Create a mock deck
-    #     mock_deck = MagicMock()
-    #     mock_deck_data = {
-    #         "userId": "Test",
-    #         "title": "Public TestDeck",
-    #         "description": "Test Description",
-    #         "visibility": "public"
-    #     }
-    #     mock_deck.val.return_value = mock_deck_data
-    #     mock_deck.key.return_value = "deck123"
-
-    #     # Create a mock for the public decks query
-    #     mock_decks_query = MagicMock()
-    #     mock_decks_query.each.return_value = [mock_deck]
-
-    #     # Set up the mock to return the public decks
-    #     mock_db.child.return_value.order_by_child.return_value.equal_to.return_value.get.return_value = mock_decks_query
-
-    #     # Also mock the case when querying for public decks
-    #     mock_db.child.return_value.order_by_child.return_value.equal_to.return_value.get.return_value.each.return_value = []
-
-    #     # Set up the mock for public decks
-    #     mock_db.child.return_value.order_by_child.return_value.equal_to.return_value.get.return_value = mock_decks_query
-
-    #     # Make the request without a localId (to get public decks)
-    #     response = self.app.get('/deck/all')  # No localId provided
-
-    #     # Assertions
-    #     assert response.status_code == 200
-    #     response_data = json.loads(response.data)
-    #     assert len(response_data['decks']) == 0  # Expecting one public deck
-    #     assert response_data['decks'][0]['title'] == 'Public TestDeck'
-    #     assert response_data['decks'][0]['id'] == 'deck123'
-
-    #     # Verify that the correct calls were made to the database
-    #     mock_db.child.assert_called_with("deck")
-    #     mock_db.child.return_value.order_by_child.assert_called_with("visibility")
-    #     mock_db.child.return_value.order_by_child.return_value.equal_to.assert_called_with("public")
 
     @patch('src.deck.routes.db')
     def test_get_decks_error(self, mock_db):
