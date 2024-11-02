@@ -44,7 +44,8 @@ FlashCards is a spaced repetition learning platform to <b>create</b>, <b>memoriz
 6. Recently visited Decks
 
 ## Watch Flashcards in Action
-[Watch the demo video here](images/FlashCards.mp4)
+<video src="images/FlashCards.mp4" controls="controls" style="max-width: 100%; height: auto;">
+</video>
 
 ## Tech Stack
 <a href="https://flask.palletsprojects.com/en/2.2.x/"><img src="https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white" /></a>
