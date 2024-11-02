@@ -11,6 +11,7 @@ coverage:
         threshold: 2%
 
 ignore:
+  - "backend/Documentation/**/*"
   - "backend/test/**/*"
   - "**/site-packages/**/*"
   - "**/__init__.py"
