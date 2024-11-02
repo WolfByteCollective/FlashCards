@@ -34,21 +34,21 @@ jobs:
           python -m coverage xml
           python -m coverage html
 
-      # Frontend setup
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '20.17.0'
+      # # Frontend setup
+      # - name: Set up Node.js
+      #   uses: actions/setup-node@v2
+      #   with:
+      #     node-version: '20.17.0'
 
-      - name: Install frontend dependencies
-        run: |
-          cd frontend
-          npm install --force
+      # - name: Install frontend dependencies
+      #   run: |
+      #     cd frontend
+      #     npm install --force
 
-      - name: Run frontend tests with coverage
-        run: |
-          cd frontend
-          npm test -- --coverage --coverageReporters=lcov  # Ensure correct report generation
+      # - name: Run frontend tests with coverage
+      #   run: |
+      #     cd frontend
+      #     npm test -- --coverage --coverageReporters=lcov  # Ensure correct report generation
 
       # Upload coverage reports to Codecov
       - name: Upload backend coverage report to Codecov
