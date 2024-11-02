@@ -1,37 +1,31 @@
 codecov:
-  require_ci_to_pass: yes  # Ensure Codecov only reports if all CI tests pass
+  require_ci_to_pass: yes
+
 
 coverage:
-  paths:
-    - src  # Only include files within the src directory for coverage reporting
-  precision: 2  # Show coverage results with 2 decimal places
-  round: down  # Round down coverage percentages
-  range: "70...100"  # Warn if coverage falls below 70%
+  precision: 2
+  round: down
+  range: "70...100"
 
-  # Status checks for project and patch
   status:
     project:
       default:
-        target: auto  # Automatically set a target based on recent coverage
-        threshold: 0.5%  # Allowable decrease threshold for the entire project
+        target: auto
+        threshold: 0.5%
     patch:
       default:
-        target: auto  # Automatically set a target for new code in PRs
-        threshold: 0.5%  # Allowable decrease threshold for new code patches
-
-ignore:
-  - "tests/*"  # Ignore test files
-  - "*.pyc"  # Ignore compiled Python files
+        target: auto
+        threshold: 0.5%
 
 parsers:
   gcov:
     branch_detection:
-      conditional: yes  # Detect coverage for conditionals
-      loop: yes  # Detect loop branches
-      method: no  # Skip method-level branch detection
-      macro: no  # Skip macro branch detection
+      conditional: yes
+      loop: yes
+      method: no
+      macro: no
 
 comment:
-  layout: "reach, diff, flags, files, footer"  # Comment format on PRs
+  layout: "reach,diff,flags,files,footer"
   behavior: default
-  require_changes: no  # Comment even if there are no coverage changes
+  require_changes: no
