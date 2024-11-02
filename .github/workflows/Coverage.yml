@@ -178,7 +178,7 @@ jobs:
       - name: Run backend tests with coverage
         run: |
           cd backend
-          python -m coverage run -m pytest test/test_main.py test/test_auth.py test/test_deck.py test/test_card.py test/test_folders.py
+          python -m pytest --cov=src --cov-report=term-missing
           python -m coverage xml
           python -m coverage html
 
@@ -206,7 +206,7 @@ jobs:
         with:
           files: ./backend/coverage.xml
           flags: unittests
-          name: codecov-backend
+          name: codecov-umbrella
           fail_ci_if_error: true
           verbose: true
 
@@ -225,7 +225,7 @@ jobs:
       - name: Archive backend coverage results
         uses: actions/upload-artifact@v3
         with:
-          name: backend-code-coverage-report
+          name: code-coverage-report
           path: |
             backend/coverage.xml
             backend/htmlcov
