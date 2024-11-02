@@ -62,16 +62,16 @@ jobs:
           fail_ci_if_error: true
           verbose: true
 
-      - name: Upload frontend coverage report to Codecov
-        uses: codecov/codecov-action@v3
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        with:
-          files: ./frontend/coverage/lcov.info  # Update based on actual path
-          flags: unittests
-          name: codecov-frontend
-          fail_ci_if_error: true
-          verbose: true
+      # - name: Upload frontend coverage report to Codecov
+      #   uses: codecov/codecov-action@v3
+      #   env:
+      #     CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      #   with:
+      #     files: ./frontend/coverage/lcov.info  # Update based on actual path
+      #     flags: unittests
+      #     name: codecov-frontend
+      #     fail_ci_if_error: true
+      #     verbose: true
 
       # Archive code coverage results
       - name: Archive backend coverage results
@@ -82,8 +82,8 @@ jobs:
             backend/coverage.xml
             backend/htmlcov
 
-      - name: Archive frontend coverage results
-        uses: actions/upload-artifact@v3
-        with:
-          name: frontend-code-coverage-report
-          path: frontend/coverage  # Adjust this path based on your actual coverage output directory
+      # - name: Archive frontend coverage results
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: frontend-code-coverage-report
+      #     path: frontend/coverage  
