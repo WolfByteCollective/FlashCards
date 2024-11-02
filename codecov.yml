@@ -28,3 +28,10 @@ comment:
   layout: "reach,diff,flags,files,footer"
   behavior: default
   require_changes: no
+
+ignore:
+  - "backend/*.py"
+  - "backend/Documentation/**/*"
+  - "backend/test/**/*"
+  - "**/site-packages/**/*"
+  - "**/__init__.py"
