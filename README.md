@@ -18,8 +18,8 @@
 <a href="https://app.codecov.io/gh/WolfByteCollective/FlashCards" alt="Codecov">
 <img src="https://codecov.io/github/WolfByteCollective/FlashCards/branch/main/graph/badge.svg"/> </a>
 
-<a href="https://zenodo.org/badge/latestdoi/539553646" alt="DOI">
-<img src="https://zenodo.org/badge/539553646.svg"/> </a>
+<a href="https://doi.org/10.5281/zenodo.14027445" alt="DOI">
+<img src="https://zenodo.org/badge/872468772.svg"/> </a>
 <a href="https://img.shields.io/badge/python-v3.8+-yellow.svg" alt="Python version">
 <img src="https://img.shields.io/badge/python-v3.8+-yellow.svg"/> </a>
 <a href="https://img.shields.io/github/repo-size/JohnDamilola/FlashCards?color=brightgreen" alt="Repo size">
@@ -44,7 +44,7 @@ FlashCards is a spaced repetition learning platform to <b>create</b>, <b>memoriz
 6. Recently visited Decks
 
 ## Watch Flashcards in Action
-[Watch the video](https://github.com/sdalal11/WolfByteCollective/blob/main/images/FlashCards.mp4?raw=true)
+[Watch FlashCards Video](./images/FlashCards-2.mp4)
 
 ## Tech Stack
 <a href="https://flask.palletsprojects.com/en/2.2.x/"><img src="https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white" /></a>
@@ -58,10 +58,6 @@ FlashCards is a spaced repetition learning platform to <b>create</b>, <b>memoriz
 ## Getting started & Installation:
 - Backend [See README.md](https://github.com/WolfByteCollective/FlashCards/blob/main/backend/Readme.md)
 - Frontend [See README.md](https://github.com/WolfByteCollective/FlashCards/blob/main/frontend/README.md)
-
-## Demo Links
-- Backend API Endpoint URL: https://flashcards-server-api.herokuapp.com/ [Docs](https://github.com/JohnDamilola/FlashCards/blob/main/backend/api-docs.md)
-- Frontend: https://flashcards-519da.web.app/
 
 ## Current Screens
 
