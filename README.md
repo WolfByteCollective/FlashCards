@@ -13,12 +13,7 @@
 <img src="https://img.shields.io/github/contributors/JohnDamilola/FlashCards?style=plastic"/> </a>
 <a href="https://github.com/JohnDamilola/FlashCards/actions/workflows/Application.yml" alt="Python application">
 <img src="https://github.com/JohnDamilola/FlashCards/actions/workflows/Application.yml/badge.svg?style=plastic?branch=main"/> </a>
-<a href="https://github.com/JohnDamilola/FlashCards/actions/workflows/Coverage.yml/badge.svg" alt="Code coverage">
-<img src="https://github.com/JohnDamilola/FlashCards/actions/workflows/Coverage.yml/badge.svg"/> </a>
-<!-- <a href="https://app.codecov.io/gh/JohnDamilola/FlashCards" alt="Codecov">
-<img src="https://codecov.io/github/JohnDamilola/FlashCards/branch/main/graph/badge.svg"/> </a>
- -->
-[![Coverage Report](https://github.com/WolfByteCollective/FlashCards/actions/workflows/Coverage.yml/badge.svg?branch=main)](https://github.com/WolfByteCollective/FlashCards/actions/workflows/Coverage.yml)
+[![Coverage Report](https://github.com/WolfByteCollective/FlashCards/actions/workflows/Coverage.yml/badge.svg)](https://github.com/WolfByteCollective/FlashCards/actions/workflows/Coverage.yml)
 <a href="https://zenodo.org/badge/latestdoi/539553646" alt="DOI">
 <img src="https://zenodo.org/badge/539553646.svg"/> </a>
 <a href="https://img.shields.io/badge/python-v3.8+-yellow.svg" alt="Python version">
@@ -29,12 +24,9 @@
 <img src="https://img.shields.io/tokei/lines/github/johndamilola/flashcards?style=plastic">
 <a href="https://github.com/JohnDamilola/FlashCards/issues">
   <img src="https://img.shields.io/github/issues-raw/johndamilola/flashcards?style=plastic"></a>
-
-
 <a href="https://img.shields.io/github/release/JohnDamilola/FlashCards?color=brightblue" alt="Release">
 <img src="https://img.shields.io/github/release/JohnDamilola/FlashCards?color=brightblue"/> </a>
 </p>
-
 ## Description
 Are you a student and having trouble preparing for tests and exams? Look no further. FlashCards also helps you memorize all that hard-to-remember information with online flashcards so that you ace your exams!
 
