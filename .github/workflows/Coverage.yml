@@ -196,7 +196,12 @@ jobs:
       - name: Run frontend tests with coverage
         run: |
           cd frontend
-          npm test -- --coverage  # Ensure your test command generates coverage reports
+          npm test -- --coverage --coverageReporters=lcov  # Ensure correct report generation
+
+      - name: List frontend directory
+        run: |
+          cd frontend
+          ls -R  # List files to verify the coverage report location
 
       # Upload coverage reports to Codecov
       - name: Upload backend coverage report to Codecov
@@ -215,7 +220,7 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
-          files: ./frontend/coverage/*.xml  # Adjust based on where your frontend coverage report is generated
+          files: ./frontend/coverage/lcov.info  # Update based on actual path
           flags: unittests
           name: codecov-frontend
           fail_ci_if_error: true
