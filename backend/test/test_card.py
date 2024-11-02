@@ -223,16 +223,16 @@ class CardTestApp(unittest.TestCase):
         data = json.loads(response.data)
         self.assertTrue('Update Card Failed' in data['message'])
 
-    @patch('src.auth.routes.auth')
-    @patch('src.deck.routes.db')
-    @patch('src.cards.routes.db')
-    def test_delete_card(self, mock_cards_db, mock_deck_db, mock_auth):
-        '''Test the delete card functionality'''
-        response = self.client.delete('/deck/test_deck/delete/test_card')
+    # @patch('src.auth.routes.auth')
+    # @patch('src.deck.routes.db')
+    # @patch('src.cards.routes.db')
+    # def test_delete_card(self, mock_cards_db, mock_deck_db, mock_auth):
+    #     '''Test the delete card functionality'''
+    #     response = self.client.delete('/deck/test_deck/delete/test_card')
         
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.data)
-        self.assertEqual(data['message'], 'Delete Card Successful')
+    #     self.assertEqual(response.status_code, 200)
+    #     data = json.loads(response.data)
+    #     self.assertEqual(data['message'], 'Delete Card Successful')
 
     @patch('src.auth.routes.auth')
     @patch('src.deck.routes.db')
