@@ -13,10 +13,12 @@
 <img src="https://img.shields.io/github/contributors/JohnDamilola/FlashCards?style=plastic"/> </a>
 <a href="https://github.com/JohnDamilola/FlashCards/actions/workflows/Application.yml" alt="Python application">
 <img src="https://github.com/JohnDamilola/FlashCards/actions/workflows/Application.yml/badge.svg?style=plastic?branch=main"/> </a>
-<a href="https://github.com/JohnDamilola/FlashCards/actions/workflows/Coverage.yml/badge.svg" alt="Code coverage">
-<img src="https://github.com/JohnDamilola/FlashCards/actions/workflows/Coverage.yml/badge.svg"/> </a>
-<a href="https://app.codecov.io/gh/JohnDamilola/FlashCards" alt="Codecov">
-<img src="https://codecov.io/github/JohnDamilola/FlashCards/branch/main/graph/badge.svg"/> </a>
+
+<!-- [![Coverage Report](https://github.com/WolfByteCollective/FlashCards/actions/workflows/Coverage.yml/badge.svg)](https://github.com/WolfByteCollective/FlashCards/actions/workflows/Coverage.yml) -->
+
+<a href="https://app.codecov.io/gh/WolfByteCollective/FlashCards" alt="Codecov">
+<img src="https://codecov.io/github/WolfByteCollective/FlashCards/branch/main/graph/badge.svg"/> </a>
+
 <a href="https://zenodo.org/badge/latestdoi/539553646" alt="DOI">
 <img src="https://zenodo.org/badge/539553646.svg"/> </a>
 <a href="https://img.shields.io/badge/python-v3.8+-yellow.svg" alt="Python version">
@@ -27,19 +29,20 @@
 <img src="https://img.shields.io/tokei/lines/github/johndamilola/flashcards?style=plastic">
 <a href="https://github.com/JohnDamilola/FlashCards/issues">
   <img src="https://img.shields.io/github/issues-raw/johndamilola/flashcards?style=plastic"></a>
-
-
 <a href="https://img.shields.io/github/release/JohnDamilola/FlashCards?color=brightblue" alt="Release">
 <img src="https://img.shields.io/github/release/JohnDamilola/FlashCards?color=brightblue"/> </a>
 </p>
-
 ## Description
 Are you a student and having trouble preparing for tests and exams? Look no further. FlashCards also helps you memorize all that hard-to-remember information with online flashcards so that you ace your exams!
 
 FlashCards is a spaced repetition learning platform to <b>create</b>, <b>memorize</b> and <b>share</b> your knowledge list using flashcards.
 
-1. Create and customize your own deck of cards
-2. Practice mode
+1. Create folders
+2. Add decks to folder
+3. Decks in folder redirected to Practice Deck
+4. Leaderboard
+5. Quiz Mode
+6. Recently visited Decks
 
 ## Watch Flashcards in Action
 https://user-images.githubusercontent.com/17693596/194787705-309ebf62-2a3d-4075-94b4-6da814a953a8.mp4
@@ -89,12 +92,18 @@ https://user-images.githubusercontent.com/17693596/194787705-309ebf62-2a3d-4075-
 - [x] Setup backend and frontend deployment
 
 ### Phase 2:
-- [ ] Delete User Account
-- [ ] Track practice/study progress
-- [ ] Tag/Categorize Cards in a deck
-- [ ] Daily learning streaks stats
-- [ ] Invite friends to a private Study Deck
-- [ ] Chrome extension to be able to highlight a text on a website or online pdf and have an extension option from the right click to help me create/add a card to my deck on the spot.
+- [x] Add slider to navigate through the decks
+- [x] Folder Creation
+- [x] Add decks to the folders, and redirect them to the Practice Deck on click
+- [x] Quiz mode 
+- [x] Show recently visited decks on dashboard
+- [x] Leaderboard that shows the email, count of correct and incorrect answers, and rank of a particular user.
+
+### Phase 3:
+- [ ] Add a dashboard providing insights on study habits, quiz results over time, and areas needing improvement, helping users to plan their study strategy.
+- [ ] Enable collaborative learning by enabling users to share flashcards seamlessly with friends, classmates, or study groups
+- [ ] Progress tracking by subject and review options like retrying incorrect questions
+- [ ] Chrome Extension feature that enables users to highlight text on websites or online PDFs and instantly create flashcards from their selections.
 
 ## Contributions to the Project
 Please refer to the [Contributing.md](https://github.com/JohnDamilola/FlashCards/blob/main/Contributing.md) if you want to contrbute to the FlashCards source code. Follow all the guidelines mentioned and raise a pull request for the developers to review before the code goes to the main source code.
@@ -102,19 +111,16 @@ Please refer to the [Contributing.md](https://github.com/JohnDamilola/FlashCards
 ## Help
 
 Email any queries to the contributors -
-1. [Swarangi Gaurkar](sgaurka@ncsu.edu)
-2. [Kritika Javali](ksjavali@ncsu.edu)
-3. [John Damilola](djbabalo@ncsu.edu)
-4. [Aaron Dias Barreto](aadiasba@ncsu.edu)
-5. [Leo Hsiang](yhsiang@ncsu.edu)
+1. [Akhil Chawla](achawla@ncsu.edu)
+2. [Sanjana Dalal](sdalal2@ncsu.edu)
+3. [Priya Gandhi](pgandi4@ncsu.edu)
 
 ## Authors 
 
-1. [Kritika Javali](https://github.com/ksjavali)
-2. [Swarangi Gaurkar](https://github.com/Swarangigaurkar)
-3. [Aaron Dias Barreto](https://github.com/aaron278)
-4. [Leo Hsiang](https://github.com/leoohsiang)
-5. [Damilola Babalola](https://github.com/JohnDamilola)
+1. [Akhil Chawla](https://github.com/AkhilChawla)
+2. [Sanjana Dalal](https://github.com/sdalal11)
+3. [Priya Gandhi](https://github.com/PriyaGandhi311)
+
 
 ## License
 [MIT](https://tldrlegal.com/license/mit-license)
