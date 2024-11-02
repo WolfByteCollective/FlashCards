@@ -30,6 +30,8 @@ comment:
   require_changes: no
 
 ignore:
+  - "backend/*.py"
+  - "backend/Documentation/**/*"
   - "backend/test/**/*"
   - "**/site-packages/**/*"
   - "**/__init__.py"
