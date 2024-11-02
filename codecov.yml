@@ -31,7 +31,7 @@ comment:
 
 ignore:
   - "backend/*.py"
-  - "backend/Documentation/**/*"
+  - "backend/Documentation/**"
   - "backend/test/**/*"
   - "**/site-packages/**/*"
   - "**/__init__.py"
