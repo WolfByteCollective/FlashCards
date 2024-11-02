@@ -39,13 +39,10 @@ class TestFolders(unittest.TestCase):
         assert response_data['folders'][0]['name'] == "Folder 1"
         assert response_data['folders'][1]['name'] == "Folder 2"
 
-    # @patch('src.folders.routes.db')
-    # def test_get_folders_no_user_id(self, mock_db):
-    #     '''Test fetch all folders without userId returns error'''
-    #     response = self.app.get('/folders/all')
-    #     assert response.status_code == 400
-    #     response_data = json.loads(response.data)
-    #     assert response_data['error'] == "User ID is required"
+    def test_get_folders_no_user_id(self):
+        '''Test fetch all folders without userId returns error'''
+        response = self.app.get(f'/folders/all')
+        assert response.status_code == 400
 
     @patch('src.folders.routes.db')
     def test_create_folder_success(self, mock_db):
@@ -155,22 +152,32 @@ class TestFolders(unittest.TestCase):
         response_data = json.loads(response.data)
         assert "Failed to remove deck from folder" in response_data['message']
 
-    # @patch('src.folders.routes.db')
-    # def test_get_decks_for_folder_success(self, mock_db):
-    #     '''Test successful retrieval of decks for a folder'''
-    #     folder_id = "folder_id"
-    #     mock_deck_data = [
-    #         MagicMock(key='deck_id_1', val=lambda: {"title": "Deck 1"}),
-    #         MagicMock(key='deck_id_2', val=lambda: {"title": "Deck 2"}),
-    #     ]
-    #     mock_db.child.return_value.order_by_child.return_value.equal_to.return_value.get.return_value.each.return_value = mock_deck_data
-        
-    #     response = self.app.get(f'/decks/{folder_id}')
-    #     assert response.status_code == 200
-    #     response_data = json.loads(response.data)
-    #     assert len(response_data['decks']) == 2
-    #     assert response_data['decks'][0]['title'] == "Deck 1"
-    #     assert response_data['decks'][1]['title'] == "Deck 2"
+    @patch('src.folders.routes.db')
+    def test_get_decks_for_folder_success(self, mock_db):
+        '''Test successful retrieval of decks for a folder'''
+        folder_id = "folder_id"
+
+        # Mock the folder_deck response for folder decks query
+        mock_folder_deck_data = [
+            MagicMock(key=lambda: 'deck_id_1', val=lambda: {"deckId": "deck_id_1"}),
+            MagicMock(key=lambda: 'deck_id_2', val=lambda: {"deckId": "deck_id_2"}),
+        ]
+        mock_db.child.return_value.order_by_child.return_value.equal_to.return_value.get.return_value.each.return_value = mock_folder_deck_data
+
+        # Mock the individual deck data for each deck in the deck list
+        mock_deck_1 = MagicMock(val=lambda: {"title": "Deck 1"})
+        mock_deck_2 = MagicMock(val=lambda: {"title": "Deck 2"})
+        mock_db.child.return_value.child.return_value.get.side_effect = [mock_deck_1, mock_deck_2]
+
+        # Make the API call
+        response = self.app.get(f'/decks/{folder_id}')
+
+        # Assert response status and data
+        assert response.status_code == 200
+        response_data = json.loads(response.data)
+        assert len(response_data['decks']) == 2
+        assert response_data['decks'][0]['title'] == "Deck 1"
+        assert response_data['decks'][1]['title'] == "Deck 2"
 
     @patch('src.folders.routes.db')
     def test_get_decks_for_folder_error(self, mock_db):

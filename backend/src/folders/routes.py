@@ -221,7 +221,7 @@ def get_decks_for_folder(folder_id):
         deck_list = []
         for folders in folder_obj.each():
             obj = folders.val()
-            # print("obj: ", obj)
+            print("obj: ", obj)
             obj['id'] = folders.key()  # Optional: if you need the deck ID
             deck_list.append(obj["deckId"])
         print("deck_list", deck_list)
@@ -236,35 +236,9 @@ def get_decks_for_folder(folder_id):
             status=200
         ), 200
     except Exception as e:
+        print(e)
         return jsonify(
             decks=[],
             message=f"An error occurred: {e}",
             status=400
         ), 400
-    
-@folder_bp.route('/folders/all', methods=['GET'])
-@cross_origin(supports_credentials=True)
-def get_folders_with_decks():
-    """
-    Fetches all folders for the logged-in user, including the associated decks in each folder.
-    """
-    user_id = request.args.get('userId')
-    
-    if not user_id:
-        return jsonify({"error": "User ID is required"}), 400
-
-    try:
-        user_folders = db.child("folder").order_by_child("userId").equal_to(user_id).get()
-        folders_data = []
-        for folder in user_folders.each():
-            folder_data = folder.val()
-            folder_data['id'] = folder.key()  # Add folder ID
-            decks = db.child("folder_deck").order_by_child("folderId").equal_to(folder.key()).get()
-            folder_data['decks'] = [{"id": deck.key(), **deck.val()} for deck in decks.each()]
-            folders_data.append(folder_data)
-
-        return jsonify({"folders": folders_data}), 200
-
-    except Exception as e:
-        print(f"Error fetching folders: {e}")
-        return jsonify({"error": "Failed to retrieve folders"}), 500
