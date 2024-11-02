@@ -44,8 +44,7 @@ FlashCards is a spaced repetition learning platform to <b>create</b>, <b>memoriz
 6. Recently visited Decks
 
 ## Watch Flashcards in Action
-<video src="images/FlashCards.mp4" controls="controls" style="max-width: 100%; height: auto;">
-</video>
+[Watch FlashCards Video](./images/FlashCards.mp4)
 
 ## Tech Stack
 <a href="https://flask.palletsprojects.com/en/2.2.x/"><img src="https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white" /></a>
@@ -57,17 +56,14 @@ FlashCards is a spaced repetition learning platform to <b>create</b>, <b>memoriz
 <a href="https://www.heroku.com/"><img src="https://img.shields.io/badge/Heroku-430098?style=for-the-badge&logo=heroku&logoColor=white" /></a>
 
 ## Getting started & Installation:
-- Backend [See README.md](https://github.com/JohnDamilola/FlashCards/blob/main/backend/Readme.md)
-- Frontend [See README.md](https://github.com/JohnDamilola/FlashCards/blob/main/frontend/README.md)
+- Backend [See README.md](https://github.com/WolfByteCollective/FlashCards/blob/main/backend/Readme.md)
+- Frontend [See README.md](https://github.com/WolfByteCollective/FlashCards/blob/main/frontend/README.md)
 
 ## Demo Links
 - Backend API Endpoint URL: https://flashcards-server-api.herokuapp.com/ [Docs](https://github.com/JohnDamilola/FlashCards/blob/main/backend/api-docs.md)
 - Frontend: https://flashcards-519da.web.app/
 
 ## Current Screens
-## Demo Screens
-
-## Demo Screens
 
 <p style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; ">
   <img src="./images/dashboard.png" alt="Demo Screens 1" width="250px" height="250px style="object-fit: cover;" />
