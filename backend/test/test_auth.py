@@ -8,6 +8,11 @@ from src.deck.routes import deck_bp
 from src.cards.routes import card_bp
 import json
 from unittest.mock import patch
+from pathlib import Path
+
+# Add the parent directory to sys.path
+sys.path.append(str(Path(__file__).parent.parent))
+
 
 class TestAuth(unittest.TestCase):
     @classmethod

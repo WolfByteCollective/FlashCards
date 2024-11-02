@@ -133,7 +133,7 @@ jobs:
     - name: Run Tests with Coverage
       run: |
         cd backend
-        pytest --cov=./ --cov-report=xml --cov-report=html test/
+        python -m pytest --cov=./ --cov-report=xml --cov-report=html test/
 
     - name: Archive code coverage results
       uses: actions/upload-artifact@v2

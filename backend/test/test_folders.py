@@ -4,6 +4,11 @@ from unittest.mock import patch, MagicMock
 from flask import Flask
 from src.deck.routes import deck_bp  # Adjust the import based on your app structure
 import pytest
+import sys
+from pathlib import Path
+
+# Add the parent directory to sys.path
+sys.path.append(str(Path(__file__).parent.parent))
 
 class TestFolders(unittest.TestCase):
     @classmethod

@@ -9,6 +9,11 @@ from src.deck.routes import deck_bp
 from src.cards.routes import card_bp
 from datetime import datetime
 import pytest
+from pathlib import Path
+
+# Add the parent directory to sys.path
+sys.path.append(str(Path(__file__).parent.parent))
+
 
 class TestDeck(unittest.TestCase):
     @classmethod
