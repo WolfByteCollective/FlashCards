@@ -13,7 +13,12 @@
 <img src="https://img.shields.io/github/contributors/JohnDamilola/FlashCards?style=plastic"/> </a>
 <a href="https://github.com/JohnDamilola/FlashCards/actions/workflows/Application.yml" alt="Python application">
 <img src="https://github.com/JohnDamilola/FlashCards/actions/workflows/Application.yml/badge.svg?style=plastic?branch=main"/> </a>
-[![Coverage Report](https://github.com/WolfByteCollective/FlashCards/actions/workflows/Coverage.yml/badge.svg)](https://github.com/WolfByteCollective/FlashCards/actions/workflows/Coverage.yml)
+
+<!-- [![Coverage Report](https://github.com/WolfByteCollective/FlashCards/actions/workflows/Coverage.yml/badge.svg)](https://github.com/WolfByteCollective/FlashCards/actions/workflows/Coverage.yml) -->
+
+<a href="https://app.codecov.io/gh/WolfByteCollective/FlashCards" alt="Codecov">
+<img src="https://codecov.io/github/WolfByteCollective/FlashCards/branch/main/graph/badge.svg"/> </a>
+
 <a href="https://zenodo.org/badge/latestdoi/539553646" alt="DOI">
 <img src="https://zenodo.org/badge/539553646.svg"/> </a>
 <a href="https://img.shields.io/badge/python-v3.8+-yellow.svg" alt="Python version">
