@@ -34,7 +34,7 @@ const Login = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleLogin = async(e: any) => {
-    e.preventDefault()
+    e.preventDefault();
     const payload = {
       email,
       password,
@@ -44,8 +44,8 @@ const Login = () => {
     await http
       .post("/login", payload)
       .then((res) => {
-        const { user } = res.data || {}
-        window.localStorage.setItem('flashCardUser', JSON.stringify(user))
+        const { user } = res.data || {};
+        window.localStorage.setItem('flashCardUser', JSON.stringify(user));
         Swal.fire({
           icon: 'success',
           title: 'Login Successful!',
@@ -54,7 +54,7 @@ const Login = () => {
         }).then(() => {
           setIsSubmitting(false);
           window.location.replace("/dashboard");
-        })
+        });
       })
       .catch((err) => {
         Swal.fire({
@@ -62,10 +62,11 @@ const Login = () => {
           title: 'Login Failed!',
           text: 'An error occurred, please try again',
           confirmButtonColor: '#221daf',
-        })
+        });
         setIsSubmitting(false);
       });
   };
+
   return (
     <div className="login-page">
       <section>
@@ -76,9 +77,10 @@ const Login = () => {
                 <h3>Welcome back! 👋🏼</h3>
                 <form onSubmit={handleLogin}>
                   <div className="form-group">
-                    <label>Email address</label>
+                    <label htmlFor="email">Email address</label>
                     <input
                       type="email"
+                      id="email" // Added id for the email input
                       placeholder="you@mail.com"
                       onChange={(e) => setEmail(e.target.value)}
                       className="form-control"
@@ -86,9 +88,10 @@ const Login = () => {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Password</label>
+                    <label htmlFor="password">Password</label>
                     <input
                       type="password"
+                      id="password" // Added id for the password input
                       placeholder="password"
                       onChange={(e) => setPassword(e.target.value)}
                       className="form-control"
